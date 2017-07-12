@@ -1,3 +1,3 @@
-Project Submission mini-app
+# Resource Submission mini-app
 
-Add/Edit form for PBDB related projects
+Add/Edit form for PBDB related apps, analysis tools and educational materials.

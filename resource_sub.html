@@ -6,17 +6,11 @@
 <link rel="stylesheet" type="text/css" href="%%app_resources%%/resource_sub.css">
 
 <!--
-<script src="%%common_resources%%/jquery-2.0.3.min.js" language="JavaScript" type="text/javascript"></script>
-<script src="%%app_resources%%/resource_sub.js" language="JavaScript" type="text/javascript"></script>
+<script src="%%app_resources%%/path.min.js" language="JavaScript" type="text/javascript"></script>
 -->
 <script src="%%common_resources%%/pbdb_webapp.js" language="JavaScript" type="text/javascript"></script>
-<script src="%%app_resources%%/d3.min.js" language="JavaScript" type="text/javascript"></script>
-<script src="%%app_resources%%/index.js" language="JavaScript" type="text/javascript"></script>
 <script src="%%app_resources%%/jquery-2.0.3.min.js" language="JavaScript" type="text/javascript"></script>
-<script src="%%app_resources%%/mustache.js" language="JavaScript" type="text/javascript"></script>
-<script src="%%app_resources%%/path.min.js" language="JavaScript" type="text/javascript"></script>
-<script src="%%app_resources%%/resources.js" language="JavaScript" type="text/javascript"></script>
-<script src="%%app_resources%%/script.min.js" language="JavaScript" type="text/javascript"></script>
+<script src="%%app_resources%%/resource_sub.js" language="JavaScript" type="text/javascript"></script>
 
 <!-- Section I: Title -->
 <div name="intro" style="margin-left: 1em; margin-right: 1em;">
@@ -45,8 +39,6 @@
         <div class="section-title left"><b>Link to Resource:</b></div>
         <div class="section-inputs">
             <input id="res-url" size="50" style="display: block;" type="text">
-            <!-- <span>Check this box if this link is to a Youtube video:&nbsp;&nbsp;</span> -->
-            <!-- <input name="is-yt" onchange="showHideImageUpload()" type="checkbox"> -->
         </div>
     </div>
 </div>
@@ -55,8 +47,9 @@
     <div class="col-sm-12" style="padding-top: 2em;">
         <div class="section-title left"><b>Image to Display:</b></div>
         <div class="section-inputs">
-            <input name="res-img" value="res-img" id="res-img" type="file" style="float:left;">
             <span><small>(Images will be resized to 400x400 px maximum)</small></span>
+            <input name="res-img" value="res-img" id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" style="float:left;"/>
+            <div id="imgTest" class="col-sm-12"></div>
         </div>
     </div>
 </div>
@@ -120,6 +113,7 @@
             <div class="inputrow"><p>Time Interval</p></div>
         </div>
         <div class="section-inputs">
+	    <input id="fname" onkeyup="myFunction()"> test box
             <div class="inputrow"><input type="text" name="res-topics" size="70"></div>
             <div class="inputrow" style="position:relative;">
                 <input type="text" name="res-taxa" size="48" id="taxonAutocompleteInput"> (start typing to pick from list)
@@ -145,17 +139,15 @@
 </div>
 
 <script language="JavaScript" type="text/javascript">
-function sendSubmission() {
-
+  function sendSubmission() {
     // collect data from html form
     var inputs = {
         title: document.getElementById('res-title').value,
         description: document.getElementById('res-desc').value,
         url: document.getElementById('res-url').value,
-        image: $("input[name=res-img]").val(),
-        type: $("input[name=res-type]:checked").val(),
-        //is_video: /youtube.com/.test(document.getElementById('res-url').value),
-        //audience: $("input[name=res-aud]:checked").map(function(){return(this.value);}).get().join(",");,
+	type: $("input[name=res-type]:checked").val(),
+        is_video: /youtube.com/.test(document.getElementById('res-url').value),
+	audience: $("input[name=res-aud]:checked").map(function(){return(this.value);}).get().join(","),
         author: $("input[name=auth-name]").val(),
         email: $("input[name=auth-email]").val(),
         affil: $("input[name=auth-affil]").val(),
@@ -184,5 +176,31 @@ function sendSubmission() {
     var emailbody = "A contributor has sent in a new resource to be posted on the PBDB website. Please proofread it and add it to the database. \n\n" + resJSON;
     var comunique = 'mailto:EMAIL@ADDRESS.NET?subject=Resource submission for review: ' + inputs.title + '&body=' + emailbody;
     window.location.href = comunique;
-};
+  };
+
+  function encodeImageFileAsURL() {
+    var filesSelected = document.getElementById("inputFileToLoad").files;
+    if (filesSelected.length > 0) {
+      var fileToLoad = filesSelected[0];
+
+      var fileReader = new FileReader();
+
+      fileReader.onload = function(fileLoadedEvent) {
+        
+        // base64 data
+        var srcData = fileLoadedEvent.target.result;
+
+        var newImage = document.createElement('img');
+        newImage.src = srcData;
+
+        document.getElementById("imgTest").innerHTML = newImage.outerHTML;
+	    $("#imgTest").children("img").first().css("max-width","400px")
+	        .css("max-height","400px")
+	        .css("float","left")
+        console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
+      }
+      fileReader.readAsDataURL(fileToLoad);
+    }
+  };
+
 </script>

@@ -5,9 +5,18 @@
 
 <link rel="stylesheet" type="text/css" href="%%app_resources%%/resource_sub.css">
 
+<!--
 <script src="%%common_resources%%/jquery-2.0.3.min.js" language="JavaScript" type="text/javascript"></script>
-<script src="%%common_resources%%/pbdb_webapp.js" language="JavaScript" type="text/javascript"></script>
 <script src="%%app_resources%%/resource_sub.js" language="JavaScript" type="text/javascript"></script>
+-->
+<script src="%%common_resources%%/pbdb_webapp.js" language="JavaScript" type="text/javascript"></script>
+<script src="%%app_resources%%/d3.min.js" language="JavaScript" type="text/javascript"></script>
+<script src="%%app_resources%%/index.js" language="JavaScript" type="text/javascript"></script>
+<script src="%%app_resources%%/jquery-2.0.3.min.js" language="JavaScript" type="text/javascript"></script>
+<script src="%%app_resources%%/mustache.js" language="JavaScript" type="text/javascript"></script>
+<script src="%%app_resources%%/path.min.js" language="JavaScript" type="text/javascript"></script>
+<script src="%%app_resources%%/resources.js" language="JavaScript" type="text/javascript"></script>
+<script src="%%app_resources%%/script.min.js" language="JavaScript" type="text/javascript"></script>
 
 <!-- Section I: Title -->
 <div name="intro" style="margin-left: 1em; margin-right: 1em;">
@@ -15,18 +24,22 @@
   <p align="center" class="small">Send us your apps, lesson plans, and other contributions</p> 
 </div>
 <br>
+
+<!-- Section II: Submission Form -->
 <div class="row pageRow">
     <div class="col-sm-12">
         <div class="section-title left"><b>Resource Title:</b></div>
         <input class="right" type="text" id="res-title" size="50">
     </div>
 </div>
+
 <div class="row pageRow">
     <div class="col-sm-12">
         <div class="section-title left"><b>Resource Description:</b></div>
         <textarea class="right" id="res-desc" rows="4" cols="50"></textarea>
     </div>
 </div>
+
 <div class="row pageRow">
     <div class="col-sm-12">
         <div class="section-title left"><b>Link to Resource:</b></div>
@@ -37,6 +50,7 @@
         </div>
     </div>
 </div>
+
 <div class="row pageRow" id="imageUploadRow">
     <div class="col-sm-12" style="padding-top: 2em;">
         <div class="section-title left"><b>Image to Display:</b></div>
@@ -46,6 +60,7 @@
         </div>
     </div>
 </div>
+
 <div class="row pageRow">
     <div class="col-sm-6">
         <div class="section-title"><b>Type of Resource:</b></div>
@@ -76,6 +91,7 @@
         </form>
     </div>
 </div>
+
 <div class="row pageRow">
     <div class="col-sm-12">
         <div class="section-title"><b>Author Information:</b></div>
@@ -94,6 +110,7 @@
         </form>
     </div>
 </div>
+
 <div class="row pageRow">
     <div class="col-sm-12">
         <div class="section-title"><b>Keywords: </b><small>(Separate multiple terms with semicolons or commas)</small></div>
@@ -118,6 +135,8 @@
         </div>
     </div>
 </div>
+
+<!-- Section III: Submit Data -->
 <div class="row pageRow">
     <div class="col-sm-12 send">
         <p>Clicking "Contribute" will send an e-mail with the above information to the PBDB Education and Outreach chairperson. Once they approve it, it will appear on the website.</p>
@@ -146,21 +165,20 @@ function sendSubmission() {
         timestart: $("input[name=res-timestart]").attr('data-oid'),
         timeend: $("input[name=res-timeend]").attr('data-oid'),
     };
+
+    // send data to the PBDB API
     var resJSON = JSON.stringify(inputs);
-
-    // construct an HTTP request
-    //var xhr = new XMLHttpRequest();
-    //xhr.open(form.method, form.action, true);
-    //xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-
-    // send the collected data as JSON
-    //xhr.send(resJSON);
-
-    //xhr.onloadend = function () {
-    // done
-    //};
-
-    //alert("The following data has been sumbitted:\n\n" + resJSON);
+    //$.ajax({
+    //    url: 'https://paleobiodb.org/data1.2t/'
+    //    type: 'POST',
+    //    data: resJSON,
+    //    contentType: 'application/json; charset=utf-8',
+    //    dataType: 'json',
+    //    async: false,
+    //    success: function(msg) {
+    //        alert(msg);
+    //    }
+    //});
 
     // generate email to administrator (this is a very temporary solution)
     var emailbody = "A contributor has sent in a new resource to be posted on the PBDB website. Please proofread it and add it to the database. \n\n" + resJSON;

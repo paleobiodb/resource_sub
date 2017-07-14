@@ -1,12 +1,6 @@
-function myFunction() {
-    var x = document.getElementById("fname");
-    x.value = x.value.toUpperCase();
-}
-
 //Autocomplete for taxon/time pick lists
 //var autocomplete = $("#taxonAutocompleteInput,#timeStartAutocompleteInput,#timeEndAutocompleteInput").on('keyup', function(event) {
-function autocomplete() {
-  console.log($(this));
+function autocompleteFill(fieldContents) {
   var dataUrl = window.location.origin,
       testUrl = "https://paleobiodb.org",
       stateUrl = "https://paleobiodb.org",
@@ -21,14 +15,15 @@ function autocomplete() {
     dataUrl = "https://training.paleobiodb.org";
   }
 
-  if (/[;,]/.test($(this).val())) {
-    var autocompleteInput = $(this).val().match(/(.*[;,] )(.*)/)[2];
-  } else {
-    var autocompleteInput = $(this).val();
-  };
-console.log(autocompleteInput);
-  var thisName = $(this).attr('id'),
+  var thisName = fieldContents.id,
       thisInput = '#' + thisName;
+
+  if (/[;,]/.test($(thisInput).val())) {
+    var autocompleteInput = $(thisInput).val().match(/(.*[;,] )(.*)/)[2];
+  } else {
+    var autocompleteInput = $(thisInput).val();
+  };
+
   switch(thisName) {
     case "taxonAutocompleteInput":
       requestType = "&type=txn";
@@ -107,25 +102,20 @@ console.log(autocompleteInput);
           $(thisInput).next('.searchResult').html(htmlResult);
           $(thisInput).next('.searchResult').css("display","inline-block");
           $(".suggestion").on("click", function(event) {
-            // event.preventDefault();
             switch (thisName) {
-              case "taxonAutocompleteInput": //allow multiple values
-                if ($(thisInput).val().indexOf(';') > -1) {
+              case "taxonAutocompleteInput": //allow multiple values in field
+                if ($(thisInput).val().indexOf(';') > -1 || $(thisInput).val().indexOf(',') > -1) {
                   var previousTaxa = $(thisInput).val().match(/(.*[;,] )(.*)/)[1];
-                  var newval = previousTaxa + $(this).attr('data-nam')
+		  var newval = previousTaxa + this.getAttribute('data-nam')
                   $(thisInput).val(newval);
-                  $(thisInput).attr('data-oid',$(thisInput).attr('data-oid') + ",txn:" + $(this).attr('data-oid'));
                 } else {
-                  $(thisInput).val($(this).attr('data-nam'));
-                  $(thisInput).attr('data-oid',"txn:" + $(this).attr('data-oid'));
+                  $(thisInput).val(this.getAttribute('data-nam'));
                 };
                 break;
               case "timeStartAutocompleteInput":
               case "timeEndAutocompleteInput":
-                $(thisInput).val($(this).attr('data-nam'));
-                $(thisInput).attr('data-oid',$(this).attr('data-oid'));
+                $(thisInput).val(this.getAttribute('data-nam'));
                 break;
-              case "universalAutocompleteInput": //this is handled by the previous switch function
               default: //do nothing           
                 break;
             }
@@ -139,7 +129,8 @@ console.log(autocompleteInput);
         }
       )
     };
-  });
+  };
+//  });
 
 //var searchFocus = $("#universalAutocompleteInput").on('focus blur', function(event) {
 function searchFocus(){
@@ -153,5 +144,6 @@ function searchFocus(){
         break;
     };
   }
-});
+};
+//});
 

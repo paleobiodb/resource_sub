@@ -11,7 +11,8 @@
 }
 
 .section-title {
-    margin: 1em 0
+    margin: 1em 0;
+    min-width: 25%;
 }
 
 .right {

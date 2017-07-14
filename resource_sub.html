@@ -5,12 +5,8 @@
 
 <link rel="stylesheet" type="text/css" href="%%app_resources%%/resource_sub.css">
 
-<!--
-<script src="%%app_resources%%/path.min.js" language="JavaScript" type="text/javascript"></script>
--->
-<script src="%%common_resources%%/pbdb_webapp.js" language="JavaScript" type="text/javascript"></script>
-<script src="%%app_resources%%/jquery-2.0.3.min.js" language="JavaScript" type="text/javascript"></script>
 <script src="%%app_resources%%/resource_sub.js" language="JavaScript" type="text/javascript"></script>
+<script src="%%app_resources%%/jquery-2.0.3.min.js" language="JavaScript" type="text/javascript"></script>
 
 <!-- Section I: Title -->
 <div name="intro" style="margin-left: 1em; margin-right: 1em;">
@@ -23,7 +19,7 @@
 <div class="row pageRow">
     <div class="col-sm-12">
         <div class="section-title left"><b>Resource Title:</b></div>
-        <input class="right" type="text" id="res-title" size="50">
+        <input class="right" type="text" id="res-title" size="52">
     </div>
 </div>
 
@@ -38,7 +34,7 @@
     <div class="col-sm-12">
         <div class="section-title left"><b>Link to Resource:</b></div>
         <div class="section-inputs">
-            <input id="res-url" size="50" style="display: block;" type="text">
+            <input id="res-url" size="52" type="text">
         </div>
     </div>
 </div>
@@ -47,7 +43,7 @@
     <div class="col-sm-12" style="padding-top: 2em;">
         <div class="section-title left"><b>Image to Display:</b></div>
         <div class="section-inputs">
-            <span><small>(Images will be resized to 400x400 px maximum)</small></span>
+            <span><small>(Images will be resized to 200x200 pixels)</small></span>
             <input name="res-img" value="res-img" id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" style="float:left;"/>
             <div id="imgTest" class="col-sm-12"></div>
         </div>
@@ -59,14 +55,14 @@
         <div class="section-title"><b>Type of Resource:</b></div>
         <form class="section-inputs" id="res-type">
             <p>
-                <input type="radio" name="res-type" value="web"> Web app<br>
-                <input type="radio" name="res-type" value="mobile"> Mobile app<br>
-                <input type="radio" name="res-type" value="lesson"> Lesson plan or educational activity<br>
-                <input type="radio" name="res-type" value="tutorial"> Educational tutorial<br>
-                <input type="radio" name="res-type" value="dataentry"> Data entry tutorial<br>
-                <input type="radio" name="res-type" value="R"> R script or package<br>
-                <input type="radio" name="res-type" value="presentation"> Presentation<br>
-                <input type="radio" name="res-type" value="other"> Other<br>
+                <input type="radio" name="res-type" value="16"> Web app<br>
+                <input type="radio" name="res-type" value="15"> Mobile app<br>
+                <input type="radio" name="res-type" value="10"> Lesson plan or educational activity<br>
+                <input type="radio" name="res-type" value=""> Educational tutorial<br>
+                <input type="radio" name="res-type" value=""> Data entry tutorial<br>
+                <input type="radio" name="res-type" value="14"> R script or package<br>
+                <input type="radio" name="res-type" value="4"> Presentation<br>
+                <input type="radio" name="res-type" value="99"> Other<br>
             </p>
         </form>
     </div>
@@ -96,10 +92,10 @@
             <div class="inputrow"><p>ORCID (optional)</p></div>
         </div>
         <form class="section-inputs" id="auth-info">
-            <div class="inputrow"><input type="text" name="auth-name"></div>
-            <div class="inputrow"><input type="text" name="auth-email"></div>
-            <div class="inputrow"><input type="text" name="auth-affil"></div>
-            <div class="inputrow"><input type="text" name="auth-ORCID"></div>
+            <div class="inputrow"><input type="text" name="auth-name" size="80"></div>
+            <div class="inputrow"><input type="text" name="auth-email" size="80"></div>
+            <div class="inputrow"><input type="text" name="auth-affil" size="80"></div>
+            <div class="inputrow"><input type="text" name="auth-ORCID" size="29"></div>
         </form>
     </div>
 </div>
@@ -113,17 +109,16 @@
             <div class="inputrow"><p>Time Interval</p></div>
         </div>
         <div class="section-inputs">
-	    <input id="fname" onkeyup="myFunction()"> test box
             <div class="inputrow"><input type="text" name="res-topics" size="70"></div>
             <div class="inputrow" style="position:relative;">
-                <input type="text" name="res-taxa" size="48" id="taxonAutocompleteInput"> (start typing to pick from list)
+                <input type="text" name="res-taxa" size="48" id="taxonAutocompleteInput" onkeyup="autocompleteFill(taxonAutocompleteInput)"> (start typing to pick from list)
                 <div class="searchResult dropdown-menu" style="display: none;"></div>
             </div>
             <div class="inputrow">
-                <input type="text" name="res-timestart" id="timeStartAutocompleteInput">
+                <input type="text" name="res-timestart" id="timeStartAutocompleteInput" onkeyup="autocompleteFill(timeStartAutocompleteInput)">
                 <div class="searchResult dropdown-menu" style="display: none;"></div>
                 to
-                <input type="text" name="res-timeend" id="timeEndAutocompleteInput"> (start typing to pick from list)
+                <input type="text" name="res-timeend" id="timeEndAutocompleteInput" onkeyup="autocompleteFill(timeEndAutocompleteInput)"> (start typing to pick from list)
                 <div class="searchResult dropdown-menu" style="display: none;"></div>
             </div>
         </div>
@@ -153,16 +148,15 @@
         affil: $("input[name=auth-affil]").val(),
         orcid: $("input[name=auth-ORCID]").val(),
         topics: $("input[name=res-topics]").val(),
-        taxa: $("input[name=res-taxa]").attr('data-oid'),
-        timestart: $("input[name=res-timestart]").attr('data-oid'),
-        timeend: $("input[name=res-timeend]").attr('data-oid'),
+        taxa: $("input[name=res-taxa]").val(),
+	timespan: $("input[name=res-timeend]").val().length>0?($("input[name=res-timestart]").val() + " - " +  $("input[name=res-timeend]").val()):$("input[name=res-timestart]").val(),
     };
 
     // send data to the PBDB API
     var resJSON = JSON.stringify(inputs);
     //$.ajax({
-    //    url: 'https://paleobiodb.org/data1.2t/'
-    //    type: 'POST',
+    //    url: 'https://paleobiodb.org/data1.2t/eduresources/addupdate.json'
+    //    type: 'PUT',
     //    data: resJSON,
     //    contentType: 'application/json; charset=utf-8',
     //    dataType: 'json',
@@ -194,9 +188,10 @@
         newImage.src = srcData;
 
         document.getElementById("imgTest").innerHTML = newImage.outerHTML;
-	    $("#imgTest").children("img").first().css("max-width","400px")
-	        .css("max-height","400px")
-	        .css("float","left")
+        $("#imgTest").children("img").first()
+            .css("max-width","200px")
+            .css("max-height","200px")
+            .css("float","left")
         console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
       }
       fileReader.readAsDataURL(fileToLoad);

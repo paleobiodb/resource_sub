@@ -6,12 +6,15 @@
 <link rel="stylesheet" type="text/css" href="%%app_resources%%/resource_sub.css">
 
 <script src="%%app_resources%%/resource_sub.js" language="JavaScript" type="text/javascript"></script>
-<script src="%%app_resources%%/jquery-2.0.3.min.js" language="JavaScript" type="text/javascript"></script>
+<script src="%%common_resources%%/jquery-2.0.3.min.js" language="JavaScript" type="text/javascript"></script>
+<script language="JavaScript" type="text/javascript">
+    var data_service_url = '%%data_url%%' + 'eduresources/addupdate.json';
+</script>
 
 <!-- Section I: Title -->
 <div name="intro" style="margin-left: 1em; margin-right: 1em;">
-  <p align="center" class="pageTitle">Resource Submission</p>
-  <p align="center" class="small">Send us your apps, lesson plans, and other contributions</p> 
+    <p align="center" class="pageTitle">Resource Submission</p>
+    <p align="center" class="small">Send us your apps, lesson plans, and other contributions</p> 
 </div>
 <br>
 
@@ -134,42 +137,48 @@
 </div>
 
 <script language="JavaScript" type="text/javascript">
+  var image_base64;
+
   function sendSubmission() {
     // collect data from html form
     var inputs = {
         title: document.getElementById('res-title').value,
         description: document.getElementById('res-desc').value,
         url: document.getElementById('res-url').value,
-	type: $("input[name=res-type]:checked").val(),
+        tags: $("input[name=res-type]:checked").val(),
         is_video: /youtube.com/.test(document.getElementById('res-url').value),
-	audience: $("input[name=res-aud]:checked").map(function(){return(this.value);}).get().join(","),
+        audience: $("input[name=res-aud]:checked").map(function(){return(this.value);}).get().join(","),
         author: $("input[name=auth-name]").val(),
         email: $("input[name=auth-email]").val(),
         affil: $("input[name=auth-affil]").val(),
         orcid: $("input[name=auth-ORCID]").val(),
         topics: $("input[name=res-topics]").val(),
         taxa: $("input[name=res-taxa]").val(),
-	timespan: $("input[name=res-timeend]").val().length>0?($("input[name=res-timestart]").val() + " - " +  $("input[name=res-timeend]").val()):$("input[name=res-timestart]").val(),
+        timespan: $("input[name=res-timeend]").val().length>0?($("input[name=res-timestart]").val() + " - " +  $("input[name=res-timeend]").val()):$("input[name=res-timestart]").val(),
+        image_data: image_base64,
     };
 
     // send data to the PBDB API
     var resJSON = JSON.stringify(inputs);
-    //$.ajax({
-    //    url: 'https://paleobiodb.org/data1.2t/eduresources/addupdate.json'
-    //    type: 'PUT',
-    //    data: resJSON,
-    //    contentType: 'application/json; charset=utf-8',
-    //    dataType: 'json',
-    //    async: false,
-    //    success: function(msg) {
-    //        alert(msg);
-    //    }
-    //});
+    $.ajax({
+        url: data_service_url,
+        type: 'PUT',
+        data: resJSON,
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        async: false,
+        success: function(data) {
+            alert('Your resource was successfully submitted for approval');                
+        },
+        error: function (xhr, textStatus, error) {
+            alert(testStatus + ": " + error);                
+        }
+    });
 
     // generate email to administrator (this is a very temporary solution)
-    var emailbody = "A contributor has sent in a new resource to be posted on the PBDB website. Please proofread it and add it to the database. \n\n" + resJSON;
-    var comunique = 'mailto:EMAIL@ADDRESS.NET?subject=Resource submission for review: ' + inputs.title + '&body=' + emailbody;
-    window.location.href = comunique;
+    //var emailbody = "A contributor has sent in a new resource to be posted on the PBDB website. Please proofread it and add it to the database. \n\n" + resJSON;
+    //var comunique = 'mailto:EMAIL@ADDRESS.NET?subject=Resource submission for review: ' + inputs.title + '&body=' + emailbody;
+    //window.location.href = comunique;
   };
 
   function encodeImageFileAsURL() {
@@ -192,10 +201,10 @@
             .css("max-width","200px")
             .css("max-height","200px")
             .css("float","left")
-        console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
+        //console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
+        image_base64 = srcData;
       }
       fileReader.readAsDataURL(fileToLoad);
     }
   };
-
 </script>

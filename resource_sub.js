@@ -1,20 +1,6 @@
 //Autocomplete for taxon/time pick lists
 //var autocomplete = $("#taxonAutocompleteInput,#timeStartAutocompleteInput,#timeEndAutocompleteInput").on('keyup', function(event) {
 function autocompleteFill(fieldContents) {
-  var dataUrl = window.location.origin,
-      testUrl = "https://paleobiodb.org",
-      stateUrl = "https://paleobiodb.org",
-      dataService = "/data1.2";
-
-  if ( window.location.search.indexOf("local") > -1 ) {
-    dataUrl = window.location.origin + ":3000";
-    testUrl = window.location.origin + ":3000";
-  } else if (window.location.search.indexOf("test") > -1) {
-    dataUrl = "https://training.paleobiodb.org";
-  } else if ( window.location.hostname === "localhost" ) {
-    dataUrl = "https://training.paleobiodb.org";
-  }
-
   var thisName = fieldContents.id,
       thisInput = '#' + thisName;
 
@@ -43,7 +29,7 @@ function autocompleteFill(fieldContents) {
     $(thisInput).next('.searchResult').css("display","none");
     $(thisInput).next('.searchResult').html("");
   } else {
-    var htmlRequest = dataUrl + dataService + '/combined/auto.json?show=countries&name=' + autocompleteInput + requestType;
+    var htmlRequest = data_service_url + 'combined/auto.json?show=countries&name=' + autocompleteInput + requestType;
     $.getJSON(encodeURI(htmlRequest)).then(
       function(json){ //if getJSON succeeded
         var htmlResult = "";

@@ -8,7 +8,8 @@
 <script src="%%app_resources%%/resource_sub.js" language="JavaScript" type="text/javascript"></script>
 <script src="%%common_resources%%/jquery-2.0.3.min.js" language="JavaScript" type="text/javascript"></script>
 <script language="JavaScript" type="text/javascript">
-    var data_service_url = '%%data_url%%' + 'eduresources/addupdate.json';
+    var data_service_url = '%%data_url%%';
+    var test_data_service_url = '%%test_data_url%%';
 </script>
 
 <!-- Section I: Title -->
@@ -19,6 +20,12 @@
 <br>
 
 <!-- Section II: Submission Form -->
+<div class="row pageRow">
+    <div class="col-sm-12">
+        <a data-toggle="modal" href="#chooseModal" class="section-inputs"><p>Click here to edit one of the <span id="numberSubmitted"></span>resources you have already submitted.</p></a>
+    </div>
+</div>
+
 <div class="row pageRow">
     <div class="col-sm-12">
         <div class="section-title left"><b>Resource Title:</b></div>
@@ -37,7 +44,7 @@
     <div class="col-sm-12">
         <div class="section-title left"><b>Link to Resource:</b></div>
         <div class="section-inputs">
-            <input id="res-url" size="52" type="text">
+            <input id="res-url" size="52" type="text" onblur="showHideImgUploader()">
         </div>
     </div>
 </div>
@@ -45,8 +52,8 @@
 <div class="row pageRow" id="imageUploadRow">
     <div class="col-sm-12" style="padding-top: 2em;">
         <div class="section-title left"><b>Image to Display:</b></div>
-        <div class="section-inputs">
-            <span><small>(Images will be resized to 200x200 pixels)</small></span>
+        <div class="section-inputs imageInput">
+            <span><small>(Images will be resized to 140x140 pixels)</small></span>
             <input name="res-img" value="res-img" id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" style="float:left;"/>
             <div id="imgTest" class="col-sm-12"></div>
         </div>
@@ -58,14 +65,14 @@
         <div class="section-title"><b>Type of Resource:</b></div>
         <form class="section-inputs" id="res-type">
             <p>
-                <input type="radio" name="res-type" value="16"> Web app<br>
-                <input type="radio" name="res-type" value="15"> Mobile app<br>
-                <input type="radio" name="res-type" value="10"> Lesson plan or educational activity<br>
-                <input type="radio" name="res-type" value=""> Educational tutorial<br>
-                <input type="radio" name="res-type" value=""> Data entry tutorial<br>
-                <input type="radio" name="res-type" value="14"> R script or package<br>
-                <input type="radio" name="res-type" value="4"> Presentation<br>
-                <input type="radio" name="res-type" value="99"> Other<br>
+                <input type="radio" name="res-type" value="web"> Web app<br>
+                <input type="radio" name="res-type" value="mobile"> Mobile app<br>
+                <input type="radio" name="res-type" value="lesson_plan"> Lesson plan or educational activity<br>
+                <input type="radio" name="res-type" value="tutorial"> Educational tutorial<br>
+                <input type="radio" name="res-type" value="data_entry"> Data entry tutorial<br>
+                <input type="radio" name="res-type" value="R"> R script or package<br>
+                <input type="radio" name="res-type" value="presentation"> Presentation<br>
+                <input type="radio" name="res-type" value="other_res"> Other<br>
             </p>
         </form>
     </div>
@@ -79,6 +86,7 @@
                 <input type="checkbox" name="res-aud" value="ug-intro"> Undergraduate, introductory<br>
                 <input type="checkbox" name="res-aud" value="ug-adv"> Undergraduate, advanced<br>
                 <input type="checkbox" name="res-aud" value="grad"> Graduate/professional<br>
+                <input type="checkbox" name="res-aud" value="other_aud"> Other<br>
             </p>
         </form>
     </div>
@@ -98,7 +106,7 @@
             <div class="inputrow"><input type="text" name="auth-name" size="80"></div>
             <div class="inputrow"><input type="text" name="auth-email" size="80"></div>
             <div class="inputrow"><input type="text" name="auth-affil" size="80"></div>
-            <div class="inputrow"><input type="text" name="auth-ORCID" size="29"></div>
+            <div class="inputrow"><input type="text" name="auth-ORCID" size="29" placeholder="0000-0000-0000-0000"></div>
         </form>
     </div>
 </div>
@@ -114,14 +122,18 @@
         <div class="section-inputs">
             <div class="inputrow"><input type="text" name="res-topics" size="70"></div>
             <div class="inputrow" style="position:relative;">
-                <input type="text" name="res-taxa" size="48" id="taxonAutocompleteInput" onkeyup="autocompleteFill(taxonAutocompleteInput)"> (start typing to pick from list)
+                <input type="text" name="res-taxa" size="48"
+                id="taxonAutocompleteInput"
+                onkeyup="autocompleteFill(taxonAutocompleteInput)"> (start with a capital letter then select)
                 <div class="searchResult dropdown-menu" style="display: none;"></div>
             </div>
             <div class="inputrow">
                 <input type="text" name="res-timestart" id="timeStartAutocompleteInput" onkeyup="autocompleteFill(timeStartAutocompleteInput)">
                 <div class="searchResult dropdown-menu" style="display: none;"></div>
                 to
-                <input type="text" name="res-timeend" id="timeEndAutocompleteInput" onkeyup="autocompleteFill(timeEndAutocompleteInput)"> (start typing to pick from list)
+                <input type="text" name="res-timeend"
+                id="timeEndAutocompleteInput"
+                onkeyup="autocompleteFill(timeEndAutocompleteInput)"> (start with a capital letter then select)
                 <div class="searchResult dropdown-menu" style="display: none;"></div>
             </div>
         </div>
@@ -136,18 +148,94 @@
     </div>
 </div>
 
-<script language="JavaScript" type="text/javascript">
-  var image_base64;
+<!-- Section IV: Modals -->
 
-  function sendSubmission() {
+<div class="modal fade" id="chooseModal" tabindex="-1" role="dialog" aria-labelledby="About" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Choose a resource to edit</h4>
+      </div>
+      <div class="modal-body">
+        <form id="userResources"></form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Section V: Scripts -->
+<script language="JavaScript" type="text/javascript">
+
+window.onload = function() {
+    var htmlRequest = test_data_service_url + 'eduresources/list.json?enterer=auth';
+    $.getJSON(htmlRequest).then(
+	function(json) {
+	    if (json.records.length > 0) {
+		var resourceCount = json.records.length;
+		var resourceList = "";
+        	json.records.map(function(d){
+        	    resourceList += "<input type='radio' name='resource' value=" + d.oid + "> " + d.title + " (" + d.author + ")<br>"
+        	});
+		resourceList += "<input type='submit' onclick='editFill(); return false;' data-dismiss='modal' value='OK'>";
+		$("#userResources").html(resourceList);
+		$("#numberSubmitted").html(resourceCount + " ");
+	    } else {
+		$("#chooseLink").css("display","none");
+	    };
+	}
+    );
+}
+
+function editFill(){
+    resOID = $("input[name=resource]:checked").val();
+    $.getJSON(test_data_service_url + "eduresources/single.json?eduresource_id=" + resOID + "&show=image").then(
+	function(json) {
+	    var res = json.records[0];
+	    if (res.title) {$('#res-title').val(res.title)};
+	    if (res.description) {$('#res-desc').val(res.description)};
+	    if (res.url) {$('#res-url').val(res.url)};
+	    if (res.tags) {$('#res-tags').val()};
+	    if (res.author) {$('input[name=auth-name]').val(res.author)};
+	    if (res.email) {$('input[name=auth-email]').val(res.email)};
+	    if (res.affil) {$('input[name=auth-affil]').val(res.affil)};
+	    if (res.orcid) {$('input[name=auth-ORCID]').val(res.orcid)};
+	    if (res.tags) {
+		res.tags.split(', ').map(function(d) {
+		    $('input[value=' + d + ']').prop('checked','true');
+		})
+	    };
+	    if (res.taxa) {$('input[name=res-taxa]').val(res.taxa)};
+	    if (res.timespan) {
+		var time = /-/.test(res.timespan)?res.timespan.split(' - '):[res.timespan,""];
+	    	$('input[name=res-timestart]').val(time[0]);
+	    	$('input[name=res-timeend]').val(time[1]);
+	    }
+	    if (res.image_data) {
+		$('#imgTest').html("<img src='" + res.image_data + "' style='float:left'>")
+	    } else if (res.image==encodeURI(res.image)) {
+		$('#imgTest').html("<img src='" + res.image + "' style='max-width: 150px; max-height: 150px; float: left;'> ")
+	    };
+	}	
+    );
+}
+
+function showHideImgUploader() {
+	var displayValue = /youtube.com/.test(document.getElementById('res-url').value);
+	$('#imageUploadRow').find('.section-title').css('color',displayValue?'#999':'black');
+	$('#imageUploadRow').find('.section-inputs').css('display',displayValue?'none':'block');	
+}
+
+var image_base64;
+
+function sendSubmission() {
     // collect data from html form
     var inputs = {
         title: document.getElementById('res-title').value,
         description: document.getElementById('res-desc').value,
         url: document.getElementById('res-url').value,
-        tags: $("input[name=res-type]:checked").val(),
+        tags: $("input[name=res-type]:checked").val() + "," + $("input[name=res-aud]:checked").map(function(){return(this.value);}).get().join(","),
         is_video: /youtube.com/.test(document.getElementById('res-url').value),
-        audience: $("input[name=res-aud]:checked").map(function(){return(this.value);}).get().join(","),
         author: $("input[name=auth-name]").val(),
         email: $("input[name=auth-email]").val(),
         affil: $("input[name=auth-affil]").val(),
@@ -158,27 +246,38 @@
         image_data: image_base64,
     };
 
-    // send data to the PBDB API
-    var resJSON = JSON.stringify(inputs);
-    $.ajax({
-        url: data_service_url,
-        type: 'PUT',
+    if (inputs.title == "" || inputs.author == "") {
+	alert('Title and author name are required');
+    } else {
+	// send data to the PBDB API
+	var resJSON = JSON.stringify(inputs);
+	var resOID = $("input[name=resource]:checked").val();
+	existingRecord = resOID?("?eduresource_id=" + resOID):"";
+	$.ajax({
+      url: test_data_service_url + 'eduresources/addupdate.json' + existingRecord,
+	    type: 'PUT',
         data: resJSON,
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        async: false,
-        success: function(data) {
-            alert('Your resource was successfully submitted for approval');                
-        },
-        error: function (xhr, textStatus, error) {
-            alert(testStatus + ": " + error);                
-        }
-    });
+	    contentType: 'application/json; charset=utf-8',
+	    dataType: 'json',
+	    async: false,
+	    success: function(data) {
+	        alert('Your resource was successfully submitted for approval');                
+	    },
+	    error: function (xhr, textStatus, error) {
+	        alert(testStatus + ": " + error);                
+	    }
+	  });
 
-    // generate email to administrator (this is a very temporary solution)
-    //var emailbody = "A contributor has sent in a new resource to be posted on the PBDB website. Please proofread it and add it to the database. \n\n" + resJSON;
-    //var comunique = 'mailto:EMAIL@ADDRESS.NET?subject=Resource submission for review: ' + inputs.title + '&body=' + emailbody;
-    //window.location.href = comunique;
+      // clear the contents of all fields after submission
+      document.getElementById('res-desc').value = '';
+      $('input[type=text]').val('');  
+      $('input[type=select]').val('');
+      $('input[type=checkbox]').prop('checked',false);
+      $('input[type=file]').val('');
+      $('input[type=checkbox]').prop('checked',false); 
+      $("#inputFileToLoad").val("");
+      $('#imgTest').html("");
+    }
   };
 
   function encodeImageFileAsURL() {
@@ -198,11 +297,12 @@
 
         document.getElementById("imgTest").innerHTML = newImage.outerHTML;
         $("#imgTest").children("img").first()
-            .css("max-width","200px")
-            .css("max-height","200px")
+            .css("max-width","150px")
+            .css("max-height","150px")
             .css("float","left")
         //console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
-        image_base64 = srcData;
+        //image_base64 = srcData;
+	image_base64 = $('#imgTest').children('img').attr('src'); //shrunk to display size
       }
       fileReader.readAsDataURL(fileToLoad);
     }

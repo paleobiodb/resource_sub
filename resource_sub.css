@@ -46,10 +46,25 @@
     padding: 0
 }
 
+#imgTest > img {
+    max-width: 150px;
+    max-height: 150px;
+    float: left;
+}
+
+#userResources {
+    padding-left: 1em;
+}
+
+#userResources > input {
+    margin-left: 1em;
+}
+
 .btn-primary {
     color: #fff;
     background-color: #428bca;
-    border-color: #357ebd
+    border-color: #357ebd;
+    font-size: medium;
 }
 
 .btn-primary.active,

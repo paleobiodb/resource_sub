@@ -177,7 +177,7 @@ window.onload = function() {
         	json.records.map(function(d){
         	    resourceList += "<input type='radio' name='resource' value=" + d.oid + "> " + d.title + " (" + d.author + ")<br>"
         	});
-		resourceList += "<input type='submit' onclick='editFill(); return false;' data-dismiss='modal' value='OK'>";
+		resourceList += "<input type='submit' onclick='editFill(); return false;' data-dismiss='modal' value='OK' class='btn btn-primary'>";
 		$("#userResources").html(resourceList);
 		$("#numberSubmitted").html(resourceCount + " ");
 	    } else {
@@ -214,7 +214,7 @@ function editFill(){
 	    if (res.image_data) {
 		$('#imgTest').html("<img src='" + res.image_data + "' style='float:left'>")
 	    } else if (res.image==encodeURI(res.image)) {
-		$('#imgTest').html("<img src='" + res.image + "' style='max-width: 150px; max-height: 150px; float: left;'> ")
+		$('#imgTest').html("<img src='" + res.image + "'> ")
 	    };
 	}	
     );
@@ -297,9 +297,6 @@ function sendSubmission() {
 
         document.getElementById("imgTest").innerHTML = newImage.outerHTML;
         $("#imgTest").children("img").first()
-            .css("max-width","150px")
-            .css("max-height","150px")
-            .css("float","left")
         //console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
         //image_base64 = srcData;
 	image_base64 = $('#imgTest').children('img').attr('src'); //shrunk to display size

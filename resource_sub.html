@@ -177,7 +177,7 @@ window.onload = function() {
         	json.records.map(function(d){
         	    resourceList += "<input type='radio' name='resource' value=" + d.oid + "> " + d.title + " (" + d.author + ")<br>"
         	});
-		resourceList += "<input type='submit' onclick='editFill(); return false;' data-dismiss='modal' value='OK' class='btn btn-primary'>";
+		resourceList += "<input type='submit' onclick='editFill(); return false;' data-dismiss='modal' value='Edit this resource' class='btn btn-primary'>";
 		$("#userResources").html(resourceList);
 		$("#numberSubmitted").html(resourceCount + " ");
 	    } else {
@@ -192,6 +192,7 @@ function editFill(){
     $.getJSON(test_data_service_url + "eduresources/single.json?eduresource_id=" + resOID + "&show=image").then(
 	function(json) {
 	    var res = json.records[0];
+        clearResourceForm();
 	    if (res.title) {$('#res-title').val(res.title)};
 	    if (res.description) {$('#res-desc').val(res.description)};
 	    if (res.url) {$('#res-url').val(res.url)};
@@ -205,6 +206,7 @@ function editFill(){
 		    $('input[value=' + d + ']').prop('checked','true');
 		})
 	    };
+	    if (res.topics) {$('input[name=res-topics]').val(res.topics)};
 	    if (res.taxa) {$('input[name=res-taxa]').val(res.taxa)};
 	    if (res.timespan) {
 		var time = /-/.test(res.timespan)?res.timespan.split(' - '):[res.timespan,""];
@@ -269,15 +271,19 @@ function sendSubmission() {
 	  });
 
       // clear the contents of all fields after submission
-      document.getElementById('res-desc').value = '';
-      $('input[type=text]').val('');  
-      $('input[type=select]').val('');
-      $('input[type=checkbox]').prop('checked',false);
-      $('input[type=file]').val('');
-      $('input[type=checkbox]').prop('checked',false); 
-      $("#inputFileToLoad").val("");
-      $('#imgTest').html("");
+      clearResourceForm();
     }
+  };
+
+  function clearResourceForm() {
+    document.getElementById('res-desc').value = '';
+    $('input[type=text]').val('');  
+    $('input[type=select]').val('');
+    $('input[type=radio]').prop('checked',false);
+    $('input[type=file]').val('');
+    $('input[type=checkbox]').prop('checked',false); 
+    $("#inputFileToLoad").val("");
+    $('#imgTest').html("");
   };
 
   function encodeImageFileAsURL() {
@@ -299,7 +305,7 @@ function sendSubmission() {
         $("#imgTest").children("img").first()
         //console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
         //image_base64 = srcData;
-	image_base64 = $('#imgTest').children('img').attr('src'); //shrunk to display size
+	    image_base64 = $('#imgTest').children('img').attr('src'); //shrunk to display size
       }
       fileReader.readAsDataURL(fileToLoad);
     }

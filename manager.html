@@ -73,7 +73,7 @@
         <div class="section-inputs imageInput">
             <span><small>(Images will be resized to 140x140 pixels)</small></span>
             <input name="res-img" value="res-img" id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" style="float:left;"/>
-            <div id="imgTest" class="col-sm-12"></div>
+            <div id="imgTest" class="col-sm-12"><img id="res-thumb"/></div>
         </div>
     </div>
 </div>
@@ -325,5 +325,47 @@ function sendSubmission(status) {
     $("#inputFileToLoad").val("");
     $('#imgTest').html("");
   };
+
+      function encodeImageFileAsURL() {
+        var filesSelected = document.getElementById("inputFileToLoad").files;
+        if (filesSelected.length > 0) {
+          var fileToLoad = filesSelected[0];
+
+          var fileReader = new FileReader();
+
+          fileReader.onload = function(fileLoadedEvent) {
+            
+            // base64 data
+            var srcData = fileLoadedEvent.target.result;
+            var thumbImg = document.getElementById('res-thumb');
+            
+            thumbImg.src = srcData;
+            resizeCanvas = document.createElement("canvas");
+            var MAX_WIDTH = 150;
+            var MAX_HEIGHT = 150;
+            var width = thumbImg.width;
+            var height = thumbImg.height;
+
+            if (width > height) {
+              if (width > MAX_WIDTH) {
+                height *= MAX_WIDTH / width;
+                width = MAX_WIDTH;
+              }
+            } else {
+              if (height > MAX_HEIGHT) {
+                width *= MAX_HEIGHT / height;
+                height = MAX_HEIGHT;
+              }
+            }
+            resizeCanvas.width = width;
+            resizeCanvas.height = height;
+            var ctx = resizeCanvas.getContext("2d");
+            ctx.drawImage(thumbImg, 0, 0, width, height);
+            image_base64 = resizeCanvas.toDataURL("image/png");
+            console.log(image_base64);
+              }
+            fileReader.readAsDataURL(fileToLoad);
+            }
+          };
 
 </script>

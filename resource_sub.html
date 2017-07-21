@@ -261,7 +261,7 @@
         } else {
         // send data to the PBDB API
         var resJSON = JSON.stringify(inputs);
-        var existingRecord = selectedRecordOID=='undefined' ? "" : ("?eduresource_id=" + selectedRecordOID);
+        var existingRecord = selectedRecordOID ? ("?eduresource_id=" + selectedRecordOID) : "";
         $.ajax({
           url: test_data_service_url + 'eduresources/addupdate.json' + existingRecord,
             type: 'PUT',

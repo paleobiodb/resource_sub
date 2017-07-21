@@ -55,7 +55,7 @@
         <div class="section-inputs imageInput">
             <span><small>(Images will be resized to 150x150 pixels)</small></span>
             <input name="res-img" value="res-img" id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" style="float:left;"/>
-            <div id="imgTest" class="col-sm-12"></div>
+            <div id="imgTest" class="col-sm-12"><img id="res-thumb" width="150" height="150"/></div>
         </div>
     </div>
 </div>
@@ -92,222 +92,242 @@
     </div>
 </div>
 
-<div class="row pageRow">
-    <div class="col-sm-12">
-        <div class="section-title"><b>Author Information:</b></div>
-        <!-- this needs to autofill via Wing -->
-        <div class="section-labels">
-            <div class="inputrow"><p>Name</p></div>
-            <div class="inputrow"><p>E-mail</p></div>
-            <div class="inputrow"><p>Affiliation</p></div>
-            <div class="inputrow"><p>ORCID (optional)</p></div>
-        </div>
-        <form class="section-inputs" id="auth-info">
-            <div class="inputrow"><input type="text" name="auth-name" size="80"></div>
-            <div class="inputrow"><input type="text" name="auth-email" size="80"></div>
-            <div class="inputrow"><input type="text" name="auth-affil" size="80"></div>
-            <div class="inputrow"><input type="text" name="auth-ORCID" size="29" placeholder="0000-0000-0000-0000"></div>
-        </form>
-    </div>
-</div>
-
-<div class="row pageRow">
-    <div class="col-sm-12">
-        <div class="section-title"><b>Keywords: </b><small>(Separate multiple terms with semicolons or commas)</small></div>
-        <div class="section-labels">
-            <div class="inputrow"><p>Topics</p></div>
-            <div class="inputrow"><p>Taxonomic Groups</p></div>
-            <div class="inputrow"><p>Time Interval</p></div>
-        </div>
-        <div class="section-inputs">
-            <div class="inputrow"><input type="text" name="res-topics" size="70"></div>
-            <div class="inputrow" style="position:relative;">
-                <input type="text" name="res-taxa" size="48"
-                id="taxonAutocompleteInput"
-                onkeyup="autocompleteFill(taxonAutocompleteInput)"> (start with a capital letter then select)
-                <div class="searchResult dropdown-menu" style="display: none;"></div>
+    <div class="row pageRow">
+        <div class="col-sm-12">
+            <div class="section-title"><b>Author Information:</b></div>
+            <!-- this needs to autofill via Wing -->
+            <div class="section-labels">
+                <div class="inputrow"><p>Name</p></div>
+                <div class="inputrow"><p>E-mail</p></div>
+                <div class="inputrow"><p>Affiliation</p></div>
+                <div class="inputrow"><p>ORCID (optional)</p></div>
             </div>
-            <div class="inputrow">
-                <input type="text" name="res-timestart" id="timeStartAutocompleteInput" onkeyup="autocompleteFill(timeStartAutocompleteInput)">
-                <div class="searchResult dropdown-menu" style="display: none;"></div>
-                to
-                <input type="text" name="res-timeend"
-                id="timeEndAutocompleteInput"
-                onkeyup="autocompleteFill(timeEndAutocompleteInput)"> (start with a capital letter then select)
-                <div class="searchResult dropdown-menu" style="display: none;"></div>
+            <form class="section-inputs" id="auth-info">
+                <div class="inputrow"><input type="text" name="auth-name" size="80"></div>
+                <div class="inputrow"><input type="text" name="auth-email" size="80"></div>
+                <div class="inputrow"><input type="text" name="auth-affil" size="80"></div>
+                <div class="inputrow"><input type="text" name="auth-ORCID" size="29" placeholder="0000-0000-0000-0000"></div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row pageRow">
+        <div class="col-sm-12">
+            <div class="section-title"><b>Keywords: </b><small>(Separate multiple terms with semicolons or commas)</small></div>
+            <div class="section-labels">
+                <div class="inputrow"><p>Topics</p></div>
+                <div class="inputrow"><p>Taxonomic Groups</p></div>
+                <div class="inputrow"><p>Time Interval</p></div>
+            </div>
+            <div class="section-inputs">
+                <div class="inputrow"><input type="text" name="res-topics" size="70"></div>
+                <div class="inputrow" style="position:relative;">
+                    <input type="text" name="res-taxa" size="48"
+                    id="taxonAutocompleteInput"
+                    onkeyup="autocompleteFill(taxonAutocompleteInput)"> (start with a capital letter then select)
+                    <div class="searchResult dropdown-menu" style="display: none;"></div>
+                </div>
+                <div class="inputrow">
+                    <input type="text" name="res-timestart" id="timeStartAutocompleteInput" onkeyup="autocompleteFill(timeStartAutocompleteInput)">
+                    <div class="searchResult dropdown-menu" style="display: none;"></div>
+                    to
+                    <input type="text" name="res-timeend"
+                    id="timeEndAutocompleteInput"
+                    onkeyup="autocompleteFill(timeEndAutocompleteInput)"> (start with a capital letter then select)
+                    <div class="searchResult dropdown-menu" style="display: none;"></div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Section III: Submit Data -->
-<div class="row pageRow">
-    <div class="col-sm-12 send">
-        <p>Clicking "Contribute" will send an e-mail with the above information to the PBDB Education and Outreach chairperson. Once they approve it, it will appear on the website.</p>
-        <button type="button" class="btn btn-primary" onclick="sendSubmission()">Contribute</button>
+    <!-- Section III: Submit Data -->
+    <div class="row pageRow">
+        <div class="col-sm-12 send">
+            <p>Clicking "Contribute" will send an e-mail with the above information to the PBDB Education and Outreach chairperson. Once they approve it, it will appear on the website.</p>
+            <button type="button" class="btn btn-primary" onclick="sendSubmission()">Contribute</button>
+        </div>
     </div>
-</div>
 
-<!-- Section IV: Modals -->
+    <!-- Section IV: Modals -->
 
-<div class="modal fade" id="chooseModal" tabindex="-1" role="dialog" aria-labelledby="About" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Choose a resource to edit</h4>
-      </div>
-      <div class="modal-body">
-        <form id="userResources"></form>
+    <div class="modal fade" id="chooseModal" tabindex="-1" role="dialog" aria-labelledby="About" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Choose a resource to edit</h4>
+          </div>
+          <div class="modal-body">
+            <form id="userResources"></form>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- Section V: Scripts -->
-<script language="JavaScript" type="text/javascript">
+    <!-- Section V: Scripts -->
+    <script language="JavaScript" type="text/javascript">
 
-window.onload = function() {
-    var htmlRequest = test_data_service_url + 'eduresources/list.json?enterer=auth';
-    $.getJSON(htmlRequest).then(
-	function(json) {
-	    if (json.records.length > 0) {
-		var resourceCount = json.records.length;
-		var resourceList = "";
-        	json.records.map(function(d){
-        	    resourceList += "<input type='radio' name='resource' value=" + d.oid + "> " + d.title + " (" + d.author + ")<br>"
-        	});
-		resourceList += "<input type='submit' onclick='editFill(); return false;' data-dismiss='modal' value='Edit this resource' class='btn btn-primary'>";
-		$("#userResources").html(resourceList);
-		$("#numberSubmitted").html(resourceCount + " ");
-	    } else {
-		$("#chooseLink").css("display","none");
-	    };
-	}
-    );
-}
-
-function editFill(){
-    resOID = $("input[name=resource]:checked").val();
-    $.getJSON(test_data_service_url + "eduresources/single.json?eduresource_id=" + resOID + "&show=image").then(
-	function(json) {
-	    var res = json.records[0];
-        clearResourceForm();
-	    if (res.title) {$('#res-title').val(res.title)};
-	    if (res.description) {$('#res-desc').val(res.description)};
-	    if (res.url) {$('#res-url').val(res.url)};
-	    if (res.tags) {$('#res-tags').val()};
-	    if (res.author) {$('input[name=auth-name]').val(res.author)};
-	    if (res.email) {$('input[name=auth-email]').val(res.email)};
-	    if (res.affil) {$('input[name=auth-affil]').val(res.affil)};
-	    if (res.orcid) {$('input[name=auth-ORCID]').val(res.orcid)};
-	    if (res.tags) {
-		res.tags.split(', ').map(function(d) {
-		    $('input[value=' + d + ']').prop('checked','true');
-		})
-	    };
-	    if (res.topics) {$('input[name=res-topics]').val(res.topics)};
-	    if (res.taxa) {$('input[name=res-taxa]').val(res.taxa)};
-	    if (res.timespan) {
-		var time = /-/.test(res.timespan)?res.timespan.split(' - '):[res.timespan,""];
-	    	$('input[name=res-timestart]').val(time[0]);
-	    	$('input[name=res-timeend]').val(time[1]);
-	    }
-	    if (res.image_data) {
-		$('#imgTest').html("<img src='" + res.image_data + "' style='float:left'>")
-	    } else if (res.image==encodeURI(res.image)) {
-		$('#imgTest').html("<img src='" + res.image + "'> ")
-	    };
-	}	
-    );
-}
-
-function showHideImgUploader() {
-	var displayValue = /youtube.com/.test(document.getElementById('res-url').value);
-	$('#imageUploadRow').find('.section-title').css('color',displayValue?'#999':'black');
-	$('#imageUploadRow').find('.section-inputs').css('display',displayValue?'none':'block');	
-}
-
-var image_base64;
-
-function sendSubmission() {
-    // collect data from html form
-    var inputs = {
-        title: document.getElementById('res-title').value,
-        description: document.getElementById('res-desc').value,
-        url: document.getElementById('res-url').value,
-        tags: $("input[name=res-type]:checked").val() + "," + $("input[name=res-aud]:checked").map(function(){return(this.value);}).get().join(","),
-        is_video: /youtube.com/.test(document.getElementById('res-url').value),
-        author: $("input[name=auth-name]").val(),
-        email: $("input[name=auth-email]").val(),
-        affil: $("input[name=auth-affil]").val(),
-        orcid: $("input[name=auth-ORCID]").val(),
-        topics: $("input[name=res-topics]").val(),
-        taxa: $("input[name=res-taxa]").val(),
-        timespan: $("input[name=res-timeend]").val().length>0?($("input[name=res-timestart]").val() + " - " +  $("input[name=res-timeend]").val()):$("input[name=res-timestart]").val(),
-        image_data: image_base64,
-    };
-
-    if (inputs.title == "" || inputs.author == "") {
-	alert('Title and author name are required');
-    } else {
-	// send data to the PBDB API
-	var resJSON = JSON.stringify(inputs);
-	var resOID = $("input[name=resource]:checked").val();
-	existingRecord = resOID?("?eduresource_id=" + resOID):"";
-	$.ajax({
-      url: test_data_service_url + 'eduresources/addupdate.json' + existingRecord,
-	    type: 'PUT',
-        data: resJSON,
-	    contentType: 'application/json; charset=utf-8',
-	    dataType: 'json',
-	    async: false,
-	    success: function(data) {
-	        alert('Your resource was successfully submitted for approval');                
-	    },
-	    error: function (xhr, textStatus, error) {
-	        alert(textStatus + ": " + error);                
-	    }
-	  });
-
-      // clear the contents of all fields after submission
-      clearResourceForm();
+    window.onload = function() {
+        var htmlRequest = test_data_service_url + 'eduresources/list.json?enterer=auth';
+        $.getJSON(htmlRequest).then(
+        function(json) {
+            if (json.records.length > 0) {
+            var resourceCount = json.records.length;
+            var resourceList = "";
+                json.records.map(function(d){
+                    resourceList += "<input type='radio' name='resource' value=" + d.oid + "> " + d.title + " (" + d.author + ")<br>"
+                });
+            resourceList += "<input type='submit' onclick='editFill(); return false;' data-dismiss='modal' value='Edit this resource' class='btn btn-primary'>";
+            $("#userResources").html(resourceList);
+            $("#numberSubmitted").html(resourceCount + " ");
+            } else {
+            $("#chooseLink").css("display","none");
+            };
+        }
+        );
     }
-  };
 
-  function clearResourceForm() {
-    document.getElementById('res-desc').value = '';
-    $('input[type=text]').val('');  
-    $('input[type=select]').val('');
-    $('input[type=radio]').prop('checked',false);
-    $('input[type=file]').val('');
-    $('input[type=checkbox]').prop('checked',false); 
-    $("#inputFileToLoad").val("");
-    $('#imgTest').html("");
-  };
-
-  function encodeImageFileAsURL() {
-    var filesSelected = document.getElementById("inputFileToLoad").files;
-    if (filesSelected.length > 0) {
-      var fileToLoad = filesSelected[0];
-
-      var fileReader = new FileReader();
-
-      fileReader.onload = function(fileLoadedEvent) {
-        
-        // base64 data
-        var srcData = fileLoadedEvent.target.result;
-
-        var newImage = document.createElement('img');
-        newImage.src = srcData;
-
-        document.getElementById("imgTest").innerHTML = newImage.outerHTML;
-        $("#imgTest").children("img").first()
-        //console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
-        //image_base64 = srcData;
-	    image_base64 = $('#imgTest').children('img').attr('src'); //shrunk to display size
-      }
-      fileReader.readAsDataURL(fileToLoad);
+    var selectedRecordOID;
+    
+    function editFill(){
+        var selected = $("input[name=resource]:checked").val();
+        $.getJSON(test_data_service_url + "eduresources/single.json?eduresource_id=" + selected + "&show=image").then(
+        function(json) {
+            var res = json.records[0];
+            clearResourceForm();
+            selectedRecordOID = selected;
+            if (res.title) {$('#res-title').val(res.title)};
+            if (res.description) {$('#res-desc').val(res.description)};
+            if (res.url) {$('#res-url').val(res.url)};
+            if (res.tags) {$('#res-tags').val()};
+            if (res.author) {$('input[name=auth-name]').val(res.author)};
+            if (res.email) {$('input[name=auth-email]').val(res.email)};
+            if (res.affil) {$('input[name=auth-affil]').val(res.affil)};
+            if (res.orcid) {$('input[name=auth-ORCID]').val(res.orcid)};
+            if (res.tags) {
+            res.tags.split(', ').map(function(d) {
+                $('input[value=' + d + ']').prop('checked','true');
+            })
+            };
+            if (res.topics) {$('input[name=res-topics]').val(res.topics)};
+            if (res.taxa) {$('input[name=res-taxa]').val(res.taxa)};
+            if (res.timespan) {
+            var time = /-/.test(res.timespan)?res.timespan.split(' - '):[res.timespan,""];
+                $('input[name=res-timestart]').val(time[0]);
+                $('input[name=res-timeend]').val(time[1]);
+            }
+            if (res.image_data) {
+            $('#imgTest').html("<img src='" + res.image_data + "' style='float:left'>")
+            } else if (res.image==encodeURI(res.image)) {
+            $('#imgTest').html("<img src='" + res.image + "'> ")
+            };
+        }	
+        );
     }
-  };
-</script>
+
+    function showHideImgUploader() {
+        var displayValue = /youtube.com/.test(document.getElementById('res-url').value);
+        $('#imageUploadRow').find('.section-title').css('color',displayValue?'#999':'black');
+        $('#imageUploadRow').find('.section-inputs').css('display',displayValue?'none':'block');	
+    }
+
+    var image_base64;
+
+    function sendSubmission() {
+        // collect data from html form
+        var inputs = {
+            title: document.getElementById('res-title').value,
+            description: document.getElementById('res-desc').value,
+            url: document.getElementById('res-url').value,
+            tags: $("input[name=res-type]:checked").val() + "," + $("input[name=res-aud]:checked").map(function(){return(this.value);}).get().join(","),
+            is_video: /youtube.com/.test(document.getElementById('res-url').value),
+            author: $("input[name=auth-name]").val(),
+            email: $("input[name=auth-email]").val(),
+            affil: $("input[name=auth-affil]").val(),
+            orcid: $("input[name=auth-ORCID]").val(),
+            topics: $("input[name=res-topics]").val(),
+            taxa: $("input[name=res-taxa]").val(),
+            timespan: $("input[name=res-timeend]").val().length>0?($("input[name=res-timestart]").val() + " - " +  $("input[name=res-timeend]").val()):$("input[name=res-timestart]").val(),
+            image_data: image_base64,
+        };
+
+        if (inputs.title == "" || inputs.author == "") {
+        alert('Title and author name are required');
+        } else {
+        // send data to the PBDB API
+        var resJSON = JSON.stringify(inputs);
+        var existingRecord = selectedRecordOID ? ("?eduresource_id=" + selectedRecordOID) : "";
+        $.ajax({
+          url: test_data_service_url + 'eduresources/addupdate.json' + existingRecord,
+            type: 'PUT',
+            data: resJSON,
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            async: false,
+            success: function(data) {
+                clearResourceForm();
+                alert('Your resource was successfully submitted for approval');                
+            },
+            error: function (xhr, textStatus, error) {
+                alert('An error occurred, and your resource was not submitted (' + textStatus + ')');                
+            }
+          });
+
+          // clear the contents of all fields after submission
+        }
+      };
+
+      function clearResourceForm() {
+        selectedRecordOID = undefined;
+        document.getElementById('res-desc').value = '';
+        $('input[type=text]').val('');  
+        $('input[type=select]').val('');
+        $('input[type=radio]').prop('checked',false);
+        $('input[type=file]').val('');
+        $('input[type=checkbox]').prop('checked',false); 
+        $("#inputFileToLoad").val("");
+        $('#imgTest').html("");
+      };
+
+      function encodeImageFileAsURL() {
+        var filesSelected = document.getElementById("inputFileToLoad").files;
+        if (filesSelected.length > 0) {
+          var fileToLoad = filesSelected[0];
+
+          var fileReader = new FileReader();
+
+          fileReader.onload = function(fileLoadedEvent) {
+            
+            // base64 data
+            var srcData = fileLoadedEvent.target.result;
+            var thumbImg = document.getElementById('res-thumb');
+            
+            thumbImg.src = srcData;
+            resizeCanvas = document.createElement("canvas");
+            var MAX_WIDTH = 150;
+            var MAX_HEIGHT = 150;
+            var width = thumbImg.width;
+            var height = thumbImg.height;
+
+            if (width > height) {
+              if (width > MAX_WIDTH) {
+                height *= MAX_WIDTH / width;
+                width = MAX_WIDTH;
+              }
+            } else {
+              if (height > MAX_HEIGHT) {
+                width *= MAX_HEIGHT / height;
+                height = MAX_HEIGHT;
+              }
+            }
+            resizeCanvas.width = width;
+            resizeCanvas.height = height;
+            var ctx = resizeCanvas.getContext("2d");
+            ctx.drawImage(thumbImg, 0, 0, width, height);
+            image_base64 = resizeCanvas.toDataURL("image/png");
+            console.log(image_base64);
+              }
+            fileReader.readAsDataURL(fileToLoad);
+            }
+          };
+        </script>

@@ -133,3 +133,29 @@ function searchFocus(){
 };
 //});
 
+
+  function encodeImageFileAsURL() {
+    var filesSelected = document.getElementById("inputFileToLoad").files;
+    if (filesSelected.length > 0) {
+      var fileToLoad = filesSelected[0];
+
+      var fileReader = new FileReader();
+
+      fileReader.onload = function(fileLoadedEvent) {
+
+        // base64 data
+        var srcData = fileLoadedEvent.target.result;
+
+        var newImage = document.createElement('img');
+        newImage.src = srcData;
+
+        document.getElementById("imgTest").innerHTML = newImage.outerHTML;
+        $("#imgTest").children("img").first()
+        //console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
+        //image_base64 = srcData;
+            image_base64 = $('#imgTest').children('img').attr('src'); //shrunk to display size
+      }
+      fileReader.readAsDataURL(fileToLoad);
+    }
+  };
+

@@ -60,6 +60,12 @@
     margin-top: 1em;
 }
 
+.tab-pane > select {
+    font-size: small;
+    margin: 2em;
+    width: 60%;
+}
+
 .btn-primary {
     color: #fff;
     background-color: #428bca;

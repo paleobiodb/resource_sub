@@ -168,6 +168,10 @@
     <script language="JavaScript" type="text/javascript">
 
     window.onload = function() {
+	getList();
+    }
+
+    function getList() {
         var htmlRequest = test_data_service_url + 'eduresources/list.json?enterer=auth';
         $.getJSON(htmlRequest).then(
         function(json) {
@@ -185,13 +189,14 @@
             };
         }
         );
-    }
+    };
 
     var selectedRecordOID;
     
     function editFill(){
         var selected = $("input[name=resource]:checked").val();
-        $.getJSON(test_data_service_url + "eduresources/single.json?eduresource_id=" + selected + "&show=image").then(
+        var urlString = test_data_service_url + "eduresources/single.json?eduresource_id=" + selected + "&show=image";
+	$.getJSON(urlString).then(
         function(json) {
             var res = json.records[0];
             clearResourceForm();
@@ -256,7 +261,7 @@
         } else {
         // send data to the PBDB API
         var resJSON = JSON.stringify(inputs);
-        var existingRecord = selectedRecordOID ? ("?eduresource_id=" + selectedRecordOID) : "";
+        var existingRecord = selectedRecordOID=='undefined' ? "" : ("?eduresource_id=" + selectedRecordOID);
         $.ajax({
           url: test_data_service_url + 'eduresources/addupdate.json' + existingRecord,
             type: 'PUT',
@@ -266,14 +271,13 @@
             async: false,
             success: function(data) {
                 clearResourceForm();
+		getList();
                 alert('Your resource was successfully submitted for approval');                
             },
             error: function (xhr, textStatus, error) {
                 alert('An error occurred, and your resource was not submitted (' + textStatus + ')');                
             }
           });
-
-          // clear the contents of all fields after submission
         }
       };
 

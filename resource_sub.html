@@ -55,7 +55,7 @@
         <div class="section-inputs imageInput">
             <span><small>(Images will be resized to 150x150 pixels)</small></span>
             <input name="res-img" value="res-img" id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" style="float:left;"/>
-            <div id="imgTest" class="col-sm-12"><img id="res-thumb" width="150" height="150"/></div>
+            <div id="imgTest" class="col-sm-12"><img id="res-thumb" max-width="150" max-height="150"/></div>
         </div>
     </div>
 </div>
@@ -261,7 +261,7 @@
         } else {
         // send data to the PBDB API
         var resJSON = JSON.stringify(inputs);
-        var existingRecord = selectedRecordOID=='undefined' ? "" : ("?eduresource_id=" + selectedRecordOID);
+        var existingRecord = selectedRecordOID ? ("?eduresource_id=" + selectedRecordOID) : "";
         $.ajax({
           url: test_data_service_url + 'eduresources/addupdate.json' + existingRecord,
             type: 'PUT',

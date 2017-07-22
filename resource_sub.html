@@ -172,7 +172,7 @@
     }
 
     function getList() {
-        var htmlRequest = test_data_service_url + 'eduresources/list.json?enterer=auth';
+        var htmlRequest = test_data_service_url + 'eduresources/list.json?enterer=me';
         $.getJSON(htmlRequest).then(
         function(json) {
             if (json.records.length > 0) {
@@ -313,22 +313,32 @@
             var width = thumbImg.width;
             var height = thumbImg.height;
 
-            if (width > height) {
-              if (width > MAX_WIDTH) {
-                height *= MAX_WIDTH / width;
-                width = MAX_WIDTH;
-              }
-            } else {
-              if (height > MAX_HEIGHT) {
-                width *= MAX_HEIGHT / height;
-                height = MAX_HEIGHT;
-              }
-            }
-            resizeCanvas.width = width;
-            resizeCanvas.height = height;
-            var ctx = resizeCanvas.getContext("2d");
-            ctx.drawImage(thumbImg, 0, 0, width, height);
-            image_base64 = resizeCanvas.toDataURL("image/png");
+	    //avoid resize code for now
+	    if( width>150 || height>150 ){
+		alert('Please choose an image no larger than 150x150 pixels');
+		return;
+	    } else {
+		image_base64 = thumbImg.src;
+	    };
+
+//image resize code (needs fixing)
+//            if (width > height) {
+//              if (width > MAX_WIDTH) {
+//                height *= MAX_WIDTH / width;
+//                width = MAX_WIDTH;
+//              }
+//            } else {
+//              if (height > MAX_HEIGHT) {
+//                width *= MAX_HEIGHT / height;
+//                height = MAX_HEIGHT;
+//              }
+//            }
+//            resizeCanvas.width = width;
+//            resizeCanvas.height = height;
+//            var ctx = resizeCanvas.getContext("2d");
+//            ctx.drawImage(thumbImg, 0, 0, width, height);
+//            image_base64 = resizeCanvas.toDataURL("image/png");
+
             console.log(image_base64);
               }
             fileReader.readAsDataURL(fileToLoad);

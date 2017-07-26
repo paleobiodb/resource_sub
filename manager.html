@@ -38,8 +38,13 @@
 		<select size="12" id="inactiveList"></select>
 	    </div>
 	</div>
-	<input type='submit' onclick='editFill(); return false;' data-dismiss='modal' value='Edit this resource' class='btn btn-primary'>
-    	<hr>
+    	<div class="col-sm-12 send">
+	    <input type='submit' onclick='editFill(); return false;' data-dismiss='modal' value='Edit this resource' class='btn btn-primary'>
+            <button type="button" class="btn btn-primary" onclick="sendSubmission('active')">Activate without editing</button>
+            <button type="button" class="btn btn-primary" onclick="sendSubmission('inactive')">Remove</button>
+            <button type="button" class="btn btn-primary" onclick="sendSubmission('delete')">Delete</button>
+    	</div>
+    <hr>
     </div>
 </div>
 
@@ -161,9 +166,8 @@
 <!-- Section III: Submit Data -->
 <div class="row pageRow">
     <div class="col-sm-12 send">
-        <button type="button" class="btn btn-primary" onclick="sendSubmission('active')">Approve</button>
-        <button type="button" class="btn btn-primary" onclick="sendSubmission('inactive')">Remove</button>
-        <button type="button" class="btn btn-primary" onclick="sendSubmission('delete')">Delete</button>
+        <button type="button" class="btn btn-primary" onclick="sendSubmission('active')">Activate with changes</button>
+        <button type="button" class="btn btn-primary" onclick="sendSubmission('changes')">Save changes without activating</button>
     </div>
 </div>
 
@@ -291,7 +295,7 @@ function sendSubmission(status) {
 	var resOID = $('.tab-pane.active').children('select').children('option:checked').val();
 	var resStatus = status=='delete' ? "" : ("&status=" + status);
 	var routeType = status=='delete' ? 'delete.json' : 'addupdate.json';
-	var alertString = {'delete':'deleted','active':'activated','inactive':'deactivated'};
+	var alertString = {'delete':'deleted','active':'activated','inactive':'deactivated','changes':'changed'};
 	$.ajax({
 	    url: test_data_service_url + 'eduresources/' + routeType + '?eduresource_id=' + resOID + resStatus,
 	    type: status=='delete' ? 'GET' : 'PUT',

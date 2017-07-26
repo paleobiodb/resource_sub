@@ -66,6 +66,10 @@
     width: 60%;
 }
 
+hr {
+    float:left;
+}
+
 .btn-primary {
     color: #fff;
     background-color: #428bca;
@@ -144,6 +148,10 @@ fieldset[disabled] .btn-primary:hover {
     -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
     box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
     background-clip: padding-box
+}
+
+.suggestion {
+    cursor: pointer;
 }
 
 @media screen and (max-width:480px) {

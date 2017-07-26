@@ -118,20 +118,20 @@ function autocompleteFill(fieldContents) {
   };
 //  });
 
-//var searchFocus = $("#universalAutocompleteInput").on('focus blur', function(event) {
-function searchFocus(){
-  if ($(this).next('searchResult').html().length() > 0) {
-    switch (event.type) {
-      case "focus":
-        $(this).next('.searchResult').css("display","inline-block");
+function searchFocus(target,type){
+  var dropdown = $("#" + target).next('.searchResult');
+  console.log(document.activeElement);
+  if (dropdown.html().length > 0 && document.activeElement != dropdown) {
+    switch (type) {
+      case "focusin":
+        $("#" + target).next('.searchResult').css("display","inline-block");
         break;
-      case "blur":
-        $(this).next('.searchResult').css("display","none");
+      case "focusout":
+        $("#" + target).next('.searchResult').css("display","none");
         break;
     };
-  }
+  };
 };
-//});
 
 
   function encodeImageFileAsURL() {

@@ -124,16 +124,16 @@
                 <div class="inputrow" style="position:relative;">
                     <input type="text" name="res-taxa" size="48"
                     id="taxonAutocompleteInput"
-                    onkeyup="autocompleteFill(taxonAutocompleteInput)"> (start with a capital letter then select)
+                    onkeyup="autocompleteFill(taxonAutocompleteInput)" onfocusout="searchFocus('taxonAutocompleteInput','focusout')" onfocusin="searchFocus('taxonAutocompleteInput','focusin')"> (start with a capital letter then select)
                     <div class="searchResult dropdown-menu" style="display: none;"></div>
                 </div>
                 <div class="inputrow">
-                    <input type="text" name="res-timestart" id="timeStartAutocompleteInput" onkeyup="autocompleteFill(timeStartAutocompleteInput)">
+                    <input type="text" name="res-timestart" id="timeStartAutocompleteInput" onkeyup="autocompleteFill(timeStartAutocompleteInput)" onblur="searchFocus(timeStartAutocompleteInput)">
                     <div class="searchResult dropdown-menu" style="display: none;"></div>
                     to
                     <input type="text" name="res-timeend"
                     id="timeEndAutocompleteInput"
-                    onkeyup="autocompleteFill(timeEndAutocompleteInput)"> (start with a capital letter then select)
+                    onkeyup="autocompleteFill(timeEndAutocompleteInput)" onblur="searchFocus(timeEndAutocompleteInput)"> (start with a capital letter then select)
                     <div class="searchResult dropdown-menu" style="display: none;"></div>
                 </div>
             </div>

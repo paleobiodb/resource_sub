@@ -15,7 +15,7 @@
 <!-- Section I: Title -->
 <div name="intro" style="margin-left: 1em; margin-right: 1em;">
     <p align="center" class="pageTitle">Manage Resources</p>
-    <p align="center" class="small">Access restricted! Change the approval status of new, altered, or existing resources.</p>
+    <p align="center" class="small">Change the approval status of new, altered, or existing resources</p>
 </div>
 <br>
 
@@ -39,10 +39,15 @@
 	    </div>
 	</div>
     	<div class="col-sm-12 send">
-	    <input type='submit' onclick='editFill(); return false;' data-dismiss='modal' value='Edit this resource' class='btn btn-primary'>
-            <button type="button" class="btn btn-primary" onclick="sendSubmission('active')">Activate without editing</button>
-            <button type="button" class="btn btn-primary" onclick="sendSubmission('inactive')">Remove</button>
-            <button type="button" class="btn btn-primary" onclick="sendSubmission('delete')">Delete</button>
+        <p align="center" class="small">First load a resource, then select an
+        action or edit the submission below</p>
+	    <input type='submit' onclick='editFill(); return false;'
+        data-dismiss='modal' value='Load resource' class='btn btn-primary'>
+            <button type="button" class="btn btn-primary" onclick="sendSubmission('active')">Activate</button>
+            <button type="button" class="btn btn-primary"
+                onclick="sendSubmission('inactive')">Deactivate</button>
+            <button type="button" class="btn btn-primary"
+                onclick="sendSubmission('delete')">Delete</button>
     	</div>
     <hr>
     </div>

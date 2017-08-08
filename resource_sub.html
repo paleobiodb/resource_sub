@@ -101,7 +101,6 @@
 <div class="row pageRow">
     <div class="col-sm-12">
         <div class="section-title"><b>Author Information:</b></div>
-        <!-- this needs to autofill via Wing -->
         <div class="section-labels">
             <div class="inputrow"><p>Name</p></div>
             <div class="inputrow"><p>E-mail</p></div>
@@ -244,6 +243,39 @@
     var image_base64;
 
     function sendSubmission() {
+        var default_img = '';
+
+        if (!image_base64) {
+            switch ($("input[name=res-type]:checked").val()) {
+                case 'web':
+                    default_img = 'default_web.png';
+                    break;
+                case 'mobile':
+                    default_img = 'default_mobile.png';
+                    break;
+                case 'lesson_plan':
+                    default_img = 'default_lesson_plan.png';
+                    break;
+                case 'tutorial':
+                    default_img = 'default_tutorial.png';
+                    break;
+                case 'data_entry':
+                    default_img = 'default_data_entry.png';
+                    break;
+                case 'R':
+                    default_img = 'default_R.png';
+                    break;
+                case 'presentation':
+                    default_img = 'default_presentation.png';
+                    break;
+                case 'other':
+                    default_img = 'default_other.png';
+                    break;
+                default:
+                    default_img = '';
+            }
+        }
+
         // collect data from html form
         var inputs = {
             title: document.getElementById('res-title').value,
@@ -259,10 +291,15 @@
             taxa: $("input[name=res-taxa]").val(),
             timespan: $("input[name=res-timeend]").val().length>0?($("input[name=res-timestart]").val() + " - " +  $("input[name=res-timeend]").val()):$("input[name=res-timestart]").val(),
             image_data: image_base64,
+            image: default_img,
         };
 
-        if (inputs.title == "" || inputs.author == "") {
-            alert('Title and author name are required');
+        if (inputs.title == "") {
+            alert('Title is required');
+        } else if (inputs.author == "") {
+            alert('Author name is required');
+        } else if (!$("input[name=res-type]:checked").val()) {
+            alert('Type of resource is required');
         } else {
             // send data to the PBDB API
             var resJSON = JSON.stringify(inputs);
@@ -325,7 +362,38 @@
                     image_base64 = thumbImg.src;
 	            };
 
-                console.log(image_base64);
+            }
+            fileReader.readAsDataURL(fileToLoad);
+        }
+    };
+
+    function loadDefaultImage() {
+        var filesSelected = document.getElementById("inputFileToLoad").files;
+        if (filesSelected.length > 0) {
+            var fileToLoad = filesSelected[0];
+            var fileReader = new FileReader();
+
+            fileReader.onload = function(fileLoadedEvent) {
+
+                // base64 data
+                var srcData = fileLoadedEvent.target.result;
+                var thumbImg = document.getElementById('res-thumb');
+
+                thumbImg.src = srcData;
+                resizeCanvas = document.createElement("canvas");
+                var MAX_WIDTH = 150;
+                var MAX_HEIGHT = 150;
+                var width = thumbImg.width;
+                var height = thumbImg.height;
+
+                //avoid resize code for now
+                if (width>150 || height>150) {
+                    alert('Please choose an image no larger than 150x150 pixels');
+                    return;
+                } else {
+                    image_base64 = thumbImg.src;
+                };
+
             }
             fileReader.readAsDataURL(fileToLoad);
         }

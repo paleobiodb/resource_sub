@@ -13,19 +13,18 @@
 </script>
 
 <!-- Section I: Title -->
-<div name="intro" style="margin-left: 1em; margin-right: 1em;">
-    <p align="center" class="pageTitle">Resource Submission</p>
-    <p align="center" class="small">Send us your apps, lesson plans, and other contributions</p> 
-</div>
-<br>
+<center>
+    <div name="intro" style="margin-left: 1em; margin-right: 1em;">
+        <p align="center" class="pageTitle">Resource Submission</p>
+        <p align="center" class="small">Send us your apps, lesson plans, and other contributions</p> 
+    </div>
+    <br>
+</center>
 
 <!-- Section II: Submission Form -->
-<div class="row pageRow">
-    <div class="col-sm-12">
-        <a data-toggle="modal" href="#chooseModal" class="section-inputs">
-            <p>Click here to edit one of the <span id="numberSubmitted"></span>resources you have already submitted.</p>
-        </a>
-    </div>
+<div class="col-sm-12">
+    <a data-toggle="modal" href="#chooseModal" class="section-inputs">Click here to edit one of the <span id="numberSubmitted"></span>resources you have already submitted.</a>
+    <br><br>
 </div>
 
 <div class="row pageRow">
@@ -42,7 +41,7 @@
         <div class="section-title left">
             <b>Resource Description:</b>
         </div>
-        <textarea class="right" id="res-desc" rows="4" cols="50"></textarea>
+        <textarea class="right" id="res-desc" rows="4" cols="54"></textarea>
     </div>
 </div>
 
@@ -102,16 +101,16 @@
     <div class="col-sm-12">
         <div class="section-title"><b>Author Information:</b></div>
         <div class="section-labels">
-            <div class="inputrow"><p>Name</p></div>
-            <div class="inputrow"><p>E-mail</p></div>
-            <div class="inputrow"><p>Affiliation</p></div>
-            <div class="inputrow"><p>ORCID (optional)</p></div>
+            <div class="inputrow"><p class="wide">Name</p></div>
+            <div class="inputrow"><p class="wide">E-mail</p></div>
+            <div class="inputrow"><p class="wide">Affiliation</p></div>
+            <div class="inputrow"><p class="wide">ORCID (optional)</p></div>
         </div>
         <form class="section-inputs" id="auth-info">
-            <div class="inputrow"><input type="text" name="auth-name" size="80"></div>
-            <div class="inputrow"><input type="text" name="auth-email" size="80"></div>
-            <div class="inputrow"><input type="text" name="auth-affil" size="80"></div>
-            <div class="inputrow"><input type="text" name="auth-ORCID" size="29" placeholder="0000-0000-0000-0000"></div>
+            <div class="inputrow"><input type="text" name="auth-name" size="60"></div>
+            <div class="inputrow"><input type="text" name="auth-email" size="60"></div>
+            <div class="inputrow"><input type="text" name="auth-affil" size="60"></div>
+            <div class="inputrow"><input type="text" name="auth-ORCID" size="19" placeholder="0000-0000-0000-0000"></div>
         </form>
     </div>
 </div>
@@ -120,16 +119,16 @@
     <div class="col-sm-12">
         <div class="section-title"><b>Keywords: </b><small>(Separate multiple terms with semicolons or commas)</small></div>
         <div class="section-labels">
-            <div class="inputrow"><p>Topics</p></div>
-            <div class="inputrow"><p>Taxonomic Groups</p></div>
-            <div class="inputrow"><p>Time Interval</p></div>
+            <div class="inputrow"><p class="wide">Topics</p></div>
+            <div class="inputrow"><p class="wide">Taxonomic Groups</p></div>
+            <div class="inputrow"><p class="wide">Time Interval</p></div>
         </div>
         <div class="section-inputs">
-            <div class="inputrow"><input type="text" name="res-topics" size="70"></div>
+            <div class="inputrow"><input type="text" name="res-topics" size="48"></div>
             <div class="inputrow" style="position:relative;">
                 <input type="text" name="res-taxa" size="48"
                 id="taxonAutocompleteInput" placeholder="Enter a specific taxa or 'Life' for general applicability"
-                onkeyup="autocompleteFill(taxonAutocompleteInput)"> (start with a capital letter then select)
+                onkeyup="autocompleteFill(taxonAutocompleteInput)"><small> (start with a capital letter then select)</small>
                 <div class="searchResult dropdown-menu" style="display: none;"></div>
             </div>
             <div class="inputrow">
@@ -138,7 +137,7 @@
                 to
                 <input type="text" name="res-timeend"
                 id="timeEndAutocompleteInput"
-                onkeyup="autocompleteFill(timeEndAutocompleteInput)"> (start with a capital letter then select)
+                onkeyup="autocompleteFill(timeEndAutocompleteInput)"><small> (start with a capital letter then select)</small>
                 <div class="searchResult dropdown-menu" style="display: none;"></div>
             </div>
         </div>
@@ -148,8 +147,11 @@
 <!-- Section III: Submit Data -->
 <div class="row pageRow">
     <div class="col-sm-12 send">
-        <p>Clicking "Contribute" will send an e-mail with the above information to the PBDB Education and Outreach chairperson. Once they approve it, it will appear on the website.</p>
-        <button type="button" class="btn btn-primary" onclick="sendSubmission()">Contribute</button>
+        <p>On submission, the PBDB Education and Outreach chairperson will review this
+        resource. When approved, it will be visible on the main resources
+        page. Thank you for contributing to the PBDB community.</p>
+        <br>
+        <button type="button" class="btn btn-primary" onclick="sendSubmission()">Submit</button>
     </div>
 </div>
 

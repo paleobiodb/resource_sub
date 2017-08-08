@@ -1028,3 +1028,10 @@ search hit BOTTOM, continuing at TOP
     }
 }
 
+form  { display: table;      }
+p     { display: table-row;  }
+label { display: table-cell; }
+input { display: table-cell; }
+
+p.narrow { line-height: 0.5; }
+p.wide { line-height: 1.8; }

@@ -77,6 +77,7 @@
                 <input type="radio" name="res-type" value="data_entry"> Data entry tutorial<br>
                 <input type="radio" name="res-type" value="R"> R script or package<br>
                 <input type="radio" name="res-type" value="presentation"> Presentation<br>
+                <!-- <input type="radio" name="res-type" value="API"> API<br> -->
                 <input type="radio" name="res-type" value="other"> Other<br>
             </p>
         </form>
@@ -128,7 +129,7 @@
             <div class="inputrow" style="position:relative;">
                 <input type="text" name="res-taxa" size="48"
                 id="taxonAutocompleteInput" placeholder="Enter a specific taxa or 'Life' for general applicability"
-                onkeyup="autocompleteFill(taxonAutocompleteInput)"><small> (start with a capital letter then select)</small>
+                onkeyup="autocompleteFill(taxonAutocompleteInput)"> (start with a capital letter then select)
                 <div class="searchResult dropdown-menu" style="display: none;"></div>
             </div>
             <div class="inputrow">
@@ -137,7 +138,7 @@
                 to
                 <input type="text" name="res-timeend"
                 id="timeEndAutocompleteInput"
-                onkeyup="autocompleteFill(timeEndAutocompleteInput)"><small> (start with a capital letter then select)</small>
+                onkeyup="autocompleteFill(timeEndAutocompleteInput)"> (start with a capital letter then select)
                 <div class="searchResult dropdown-menu" style="display: none;"></div>
             </div>
         </div>
@@ -269,6 +270,9 @@
                     break;
                 case 'presentation':
                     default_img = 'default_presentation.png';
+                    break;
+                case 'API':
+                    default_img = 'default_api.png';
                     break;
                 case 'other':
                     default_img = 'default_other.png';

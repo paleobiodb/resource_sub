@@ -13,10 +13,12 @@
 </script>
 
 <!-- Section I: Title -->
-<div name="intro" style="margin-left: 1em; margin-right: 1em;">
-    <p align="center" class="pageTitle">Manage Resources</p>
-    <p align="center" class="small">Change the approval status of new, altered, or existing resources</p>
-</div>
+<center>
+    <div name="intro" style="margin-left: 1em; margin-right: 1em;">
+        <p align="center" class="pageTitle">Manage Resources</p>
+        <p align="center" class="small">Change the approval status of new, altered, or existing resources</p>
+    </div>
+</center>
 <br>
 
 <!-- Section IIa: Select Resource -->
@@ -39,8 +41,7 @@
 	    </div>
 	</div>
     	<div class="col-sm-12 send">
-        <p align="center" class="small">First load a resource, then select an
-        action or edit the submission below</p>
+        <center><p align="center" class="small">First load a resource, then select an action or edit the submission below</p></center><br>
 	    <input type='submit' onclick='editFill(); return false;'
         data-dismiss='modal' value='Load resource' class='btn btn-primary'>
             <button type="button" class="btn btn-primary" onclick="sendSubmission('active')">Activate</button>
@@ -125,10 +126,10 @@
         <div class="section-title"><b>Author Information:</b></div>
         <!-- this needs to autofill via Wing -->
         <div class="section-labels">
-            <div class="inputrow"><p>Name</p></div>
-            <div class="inputrow"><p>E-mail</p></div>
-            <div class="inputrow"><p>Affiliation</p></div>
-            <div class="inputrow"><p>ORCID (optional)</p></div>
+            <div class="inputrow"><p class="wide">Name</p></div>
+            <div class="inputrow"><p class="wide">E-mail</p></div>
+            <div class="inputrow"><p class="wide">Affiliation</p></div>
+            <div class="inputrow"><p class="wide">ORCID (optional)</p></div>
         </div>
         <form class="section-inputs" id="auth-info">
             <div class="inputrow"><input type="text" name="auth-name" size="80"></div>
@@ -143,9 +144,9 @@
     <div class="col-sm-12">
         <div class="section-title"><b>Keywords: </b><small>(Separate multiple terms with semicolons or commas)</small></div>
         <div class="section-labels">
-            <div class="inputrow"><p>Topics</p></div>
-            <div class="inputrow"><p>Taxonomic Groups</p></div>
-            <div class="inputrow"><p>Time Interval</p></div>
+            <div class="inputrow"><p class="wide">Topics</p></div>
+            <div class="inputrow"><p class="wide">Taxonomic Groups</p></div>
+            <div class="inputrow"><p class="wide">Time Interval</p></div>
         </div>
         <div class="section-inputs">
             <div class="inputrow"><input type="text" name="res-topics" size="70"></div>
@@ -160,8 +161,7 @@
                 <div class="searchResult dropdown-menu" style="display: none;"></div>
                 to
                 <input type="text" name="res-timeend"
-                id="timeEndAutocompleteInput"
-                onkeyup="autocompleteFill(timeEndAutocompleteInput)"> (start with a capital letter then select)
+                id="timeEndAutocompleteInput" onkeyup="autocompleteFill(timeEndAutocompleteInput)"> (start with a capital letter then select)
                 <div class="searchResult dropdown-menu" style="display: none;"></div>
             </div>
         </div>
@@ -275,6 +275,42 @@ function showHideImgUploader() {
 var image_base64;
 
 function sendSubmission(status) {
+    var default_img = '';
+
+    if (!image_base64) {
+        switch ($("input[name=res-type]:checked").val()) {
+            case 'web':
+                default_img = 'default_web.png';
+                break;
+            case 'mobile':
+                default_img = 'default_mobile.png';
+                break;
+            case 'lesson_plan':
+                default_img = 'default_lesson_plan.png';
+                break;
+            case 'tutorial':
+                default_img = 'default_tutorial.png';
+                break;
+            case 'data_entry':
+                default_img = 'default_data_entry.png';
+                break;
+            case 'R':
+                default_img = 'default_R.png';
+                break;
+            case 'presentation':
+                default_img = 'default_presentation.png';
+                break;
+            case 'API':
+                default_img = 'default_api.png';
+                break;
+            case 'other':
+                default_img = 'default_other.png';
+                break;
+            default:
+                default_img = '';
+        }
+    }
+
     // collect data from html form
     var inputs = {
         title: document.getElementById('res-title').value,

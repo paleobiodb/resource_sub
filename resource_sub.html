@@ -247,8 +247,10 @@
 
     function sendSubmission() {
         var default_img = '';
+        var yt_video = /youtube.com/.test(document.getElementById('res-url').value);
+        console.log(yt_video);
 
-        if (!image_base64) {
+        if (!image_base64 && !yt_video) {
             switch ($("input[name=res-type]:checked").val()) {
                 case 'web':
                     default_img = 'default_web.png';

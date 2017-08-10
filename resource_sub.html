@@ -248,8 +248,8 @@
     function sendSubmission() {
         var default_img = '';
         var yt_video = /youtube.com/.test(document.getElementById('res-url').value);
-        console.log(yt_video);
 
+        // Set the default image if one was not uploaded
         if (!image_base64 && !yt_video) {
             switch ($("input[name=res-type]:checked").val()) {
                 case 'web':
@@ -282,6 +282,12 @@
                 default:
                     default_img = '';
             }
+        }
+
+        // For safety, blank uploaded images and default images if URL containes a YouTube video
+        if (yt_video) {
+            default_img = '';
+            image_base64 = '';
         }
 
         // collect data from html form

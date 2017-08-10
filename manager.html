@@ -41,11 +41,8 @@
 	    </div>
 	</div>
     	<div class="col-sm-12 send">
-        <center><p align="center" class="small">First select a resource and
-            choose Edit Resource. Then select an action or edit the submission
-            below.</p></center><br>
-	    <input type='submit' onclick='editFill(); return false;'
-        data-dismiss='modal' value='Edit Resource' class='btn btn-primary'>
+        <center><p align="center" class="small">First select a resource and choose Edit Resource. Then select an action or edit the submission below.</p></center><br>
+	    <input type='submit' onclick='editFill(); return false;' data-dismiss='modal' value='Edit Resource' class='btn btn-primary'>
             <button type="button" class="btn btn-primary" onclick="sendSubmission('active')">Activate</button>
             <button type="button" class="btn btn-primary" onclick="sendSubmission('inactive')">Deactivate</button>
             <button type="button" class="btn btn-primary" onclick="sendSubmission('delete')">Delete</button>
@@ -101,6 +98,7 @@
                 <input type="radio" name="res-type" value="data_entry"> Data entry tutorial<br>
                 <input type="radio" name="res-type" value="R"> R script or package<br>
                 <input type="radio" name="res-type" value="presentation"> Presentation<br>
+                <input type="radio" name="res-type" value="API"> API<br>
                 <input type="radio" name="res-type" value="other"> Other<br>
             </p>
         </form>
@@ -276,9 +274,10 @@ var image_base64;
 
 function sendSubmission(status) {
     var default_img = '';
+    var yt_video = /youtube.com/.test(document.getElementById('res-url').value);
 
     // Set the default image if one was not uploaded 
-    if (!image_base64) {
+    if (!image_base64 && !yt_video) {
         switch ($("input[name=res-type]:checked").val()) {
             case 'web':
                 default_img = 'default_web.png';
@@ -312,7 +311,7 @@ function sendSubmission(status) {
         }
     }
 
-    // For safety, blank uploaded images and default images if URL containes a YouTube video
+    //For safety, blank uploaded images and default images if URL containes a YouTube video
     if (yt_video) {
         default_img = '';
         image_base64 = '';

@@ -41,14 +41,14 @@
 	    </div>
 	</div>
     	<div class="col-sm-12 send">
-        <center><p align="center" class="small">First load a resource, then select an action or edit the submission below</p></center><br>
+        <center><p align="center" class="small">First select a resource and
+            choose Edit Resource. Then select an action or edit the submission
+            below.</p></center><br>
 	    <input type='submit' onclick='editFill(); return false;'
-        data-dismiss='modal' value='Load resource' class='btn btn-primary'>
+        data-dismiss='modal' value='Edit Resource' class='btn btn-primary'>
             <button type="button" class="btn btn-primary" onclick="sendSubmission('active')">Activate</button>
-            <button type="button" class="btn btn-primary"
-                onclick="sendSubmission('inactive')">Deactivate</button>
-            <button type="button" class="btn btn-primary"
-                onclick="sendSubmission('delete')">Delete</button>
+            <button type="button" class="btn btn-primary" onclick="sendSubmission('inactive')">Deactivate</button>
+            <button type="button" class="btn btn-primary" onclick="sendSubmission('delete')">Delete</button>
     	</div>
     <hr>
     </div>

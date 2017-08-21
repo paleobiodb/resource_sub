@@ -314,6 +314,8 @@
             alert('Author name is required');
         } else if (!$("input[name=res-type]:checked").val()) {
             alert('Type of resource is required');
+        } else if ($('#res-url').val() == "") {
+            alert('A URL for your resource is required');
         } else {
             // send data to the PBDB API
             var resJSON = JSON.stringify(inputs);

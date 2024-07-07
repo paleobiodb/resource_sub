@@ -1,6 +1,10 @@
 
 /* CSS definitions for resource submission form */
 
+.form-horizontal .control-label{
+    text-align: left;
+}
+
 .pageRow {
     padding-left: 3em
 }
@@ -19,9 +23,14 @@
     margin-top: 1em
 }
 
-.send {
-    margin: 2em 0
+.resource-list {
+    width: 90%;
+    margin: 2em 0;
 }
+
+/* .send { */
+/*     margin: 2em 0 */
+/* } */
 
 .row {
     margin-left: -15px;

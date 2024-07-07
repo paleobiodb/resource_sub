@@ -1,0 +1,212 @@
+
+  <input type="hidden" id="res-oid" value="">
+  <input type="hidden" id="orig-status" value="">
+  <input type="hidden" id="active-status" value="">
+  
+  <div class="form-group">
+    <label class="col-md-3 control-label">Resource Status:</label>
+    <div class="col-md-9">
+      <p id="res-status" class="help-block text-left"></p>
+    </div>
+   </div>
+  
+  <div class="form-group">
+    <label class="col-md-3 control-label">Resource Title:</label>
+    <div class="col-md-9">
+      <textarea id="res-title" class="form-control" rows="2" placeholder="Title is required">
+      </textarea>
+      <input type="hidden" id="orig-title">
+      <input type="hidden" id="active-title">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label class="col-md-3 control-label">Resource Description:</label>
+    <div class="col-md-9">
+      <textarea id="res-desc" class="form-control" rows="4">
+      </textarea>
+      <input type="hidden" id="orig-desc">
+      <input type="hidden" id="active-desc">
+    </div>
+  </div>
+  
+  <div class="form-group">
+     <label class="col-md-3 control-label">Resource URL:</label>
+     <div class="col-md-9">
+       <input type="text" id="res-url" class="form-control" onchange="pageapp.setDefaultImage()">
+       <input type="hidden" id="orig-url">
+       <input type="hidden" id="active-url">
+     </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-md-3 control-label">Image to Display:</label>
+    <div class="col-md-7">
+      <input type="file" id="res-imagefile" class="form-control"
+	     onchange="pageapp.loadDisplayImage()"
+	     aria-describedby="helptext-img">
+    </div>
+    <div class="col-md-2">
+      <button type="button" class="btn"
+	      onclick="pageapp.resetDisplayImage()">Set to default</button>
+    </div>
+    <input type="hidden" id="res-imagename">
+    <input type="hidden" id="orig-imagename">
+    <input type="hidden" id="active-imagename">
+    <input type="hidden" id="res-imagedata">
+    <input type="hidden" id="orig-imagedata">
+    <input type="hidden" id="active-imagedata">
+  </div>
+
+  <div class="form-group" id="res-thumbcontainer">
+    <div id="res-thumb" class="col-md-3">
+    </div>
+    <div class="col-md-8">
+      <p id="helptext-img" class="help-block small text-left">
+	If you do not select an image, a default icon corresponding to the resource type will be
+	displayed. For YouTube videos, this will be the default frame displayed by YouTube. You
+	may upload an image of any size, and it will be resized to 150x150 pixels.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6" id="res-typegroup">
+      <label class="control-label">Type of Resource:</label>
+      <div class="radio"><label><input type="radio" name="res-type" value="web"
+	onclick="pageapp.setDefaultImage()"> Web app </label></div>
+      <div class="radio"><label><input type="radio" name="res-type" value="mobile"
+	onclick="pageapp.setDefaultImage()"> Mobile app </label></div>
+      <div class="radio"><label><input type="radio" name="res-type" value="lesson_plan"
+	onclick="pageapp.setDefaultImage()"> Lesson plan or educational activity </label></div>
+      <div class="radio"><label><input type="radio" name="res-type" value="tutorial"
+	onclick="pageapp.setDefaultImage()"> Educational tutorial </label></div>
+      <div class="radio"><label><input type="radio" name="res-type" value="data_entry"
+	onclick="pageapp.setDefaultImage()"> Data entry tutorial </label></div>
+      <div class="radio"><label><input type="radio" name="res-type" value="R"
+	onclick="pageapp.setDefaultImage()"> R script or package </label></div>
+      <div class="radio"><label><input type="radio" name="res-type" value="presentation"
+	onclick="pageapp.setDefaultImage()"> Presentation </label></div>
+      <div class="radio"><label><input type="radio" name="res-type" value="API"
+	onclick="pageapp.setDefaultImage()"> API </label></div>
+      <div class="radio"><label><input type="radio" name="res-type" value="other"
+	onclick="pageapp.setDefaultImage()"> Other </label></div>
+      <input type="hidden" id="orig-type">
+      <input type="hidden" id="active-type">
+    </div>
+  
+    <div class="col-md-6" id="res-audgroup">
+      <label class="control-label">Intended Audiences:</label>
+      <div class="checkbox"><label><input type="checkbox" name="res-aud" value="general">
+	  General audiences </label></div>
+      <div class="checkbox"><label><input type="checkbox" name="res-aud" value="primary">
+	  Primary school </label></div>
+      <div class="checkbox"><label><input type="checkbox" name="res-aud" value="secondary">
+	  Middle/high school </label></div>
+      <div class="checkbox"><label><input type="checkbox" name="res-aud" value="ug-intro">
+	  Undergraduate,  introductory </label></div>
+      <div class="checkbox"><label><input type="checkbox" name="res-aud" value="ug-adv">
+	  Undergraduate,  advanced </label></div>
+      <div class="checkbox"><label><input type="checkbox" name="res-aud" value="grad">
+	  Graduate/professional </label></div>
+      <div class="checkbox"><label><input type="checkbox" name="res-aud" value="other_aud">
+	  Other </label></div>
+      <input type="hidden" id="orig-aud">
+      <input type="hidden" id="active-aud">
+    </div>
+    
+    <input type="hidden" id="orig-tags">
+    <input type="hidden" id="active-tags">
+    
+  </div>
+
+  <div class="form-group" style="margin-top: 12px">
+    <label class="control-label col-md-6" style="margin-top: 12px">Author Information:</label>
+    <div class="col-md-6">
+      <button type="button" id="btn-userinfo" class="btn input-sm"
+	      onclick="pageapp.applyUserInfo()"> Fill in my information </button>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label class="control-label col-md-2">Name</label>
+    <div class="col-md-10">
+      <input type="text" id="auth-name" class="form-control" placeholder="Author name required">
+      <input type="hidden" id="orig-name">
+      <input type="hidden" id="active-name">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label col-md-2">E-mail</label>
+    <div class="col-md-10">
+      <input type="text" id="auth-email" class="form-control">
+      <input type="hidden" id="orig-email">
+      <input type="hidden" id="active-email">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label col-md-2">Affiliation</label>
+    <div class="col-md-10">
+      <input type="text" id="auth-affil" class="form-control">
+      <input type="hidden" id="orig-affil">
+      <input type="hidden" id="active-affil">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label col-md-2">ORCID</label>
+    <div class="col-md-10">
+      <input type="text" id="auth-orcid" class="form-control">
+      <input type="hidden" id="orig-orcid">
+      <input type="hidden" id="active-orcid">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label class="control-label col-md-12" style="margin-top: 12px">Keywords:</label>
+  </div>
+  
+  <div class="form-group">
+    <label class="control-label col-md-3">Topics</label>
+    <div class="col-md-9">
+      <input type="text" id="res-topics" class="form-control">
+      <input type="hidden" id="orig-topics">
+      <input type="hidden" id="active-topics">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label col-md-3">Taxonomic Groups</label>
+    <div class="col-md-9">
+      <input type="text" id="res-taxa" class="form-control"
+             onkeyup="pageapp.autocomplete('res-taxa', 'txn')"
+	     onblur="pageapp.autohide('res-taxa')" onfocus="pageapp.autoshow('res-taxa')">
+      <div class="searchResult dropdown-menu" style="display: none;"></div>
+      <input type="hidden" id="orig-taxa">
+      <input type="hidden" id="active-taxa">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label class="control-label col-md-3">Time Interval</label>
+    <div class="col-md-4">
+      <input type="text" id="res-timestart" class="form-control"
+	     onkeyup="pageapp.autocomplete('res-timestart', 'int')"
+	     onblur="pageapp.autohide('res-taxa')" onfocus="pageapp.autoshow('res-taxa')">
+      <div class="searchResult dropdown-menu" style="display: none;"></div>
+    </div>
+    <div class="col-md-1">to</div>
+    <div class="col-md-4">
+      <input type="text" id="res-timeend" id="timeEndAutocompleteInput" class="form-control"
+	     onkeyup="pageapp.autocomplete('res-timeend', 'int')"
+	     onblur="pageapp.autohide('res-taxa')" onfocus="pageapp.autoshow('res-taxa')">
+      <div class="searchResult dropdown-menu" style="display: none;"></div>
+      <input type="hidden" id="orig-timespan">
+      <input type="hidden" id="active-timespan">
+    </div>
+  </div>
+
+<style>
+.change-mark { background-color: yellow; }
+</style>

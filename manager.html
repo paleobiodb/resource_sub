@@ -1,425 +1,119 @@
 <!-- REQUIRES_LOGIN=1; -->
 <!-- This web form allows submission and editing of external project resources -->
-<!-- for the Paleobiology Database using the database's API. -->
+<!-- for the Paleobiology Database using the Paleobiology Database API. -->
 <!-- Authors: Michael McClennen, Valerie Syverson, Julian Jenkins -->
 
 <link rel="stylesheet" type="text/css" href="%%app_resources%%/resource-sub.css">
 
-<script src="%%app_resources%%/resource-sub.js" language="JavaScript" type="text/javascript"></script>
-
-<script language="JavaScript" type="text/javascript">
-    var data_service_url = '%%data_url%%';
-    var test_data_service_url = '%%test_data_url%%';
+<script src="%%app_resources%%/resource-sub.js" language="JavaScript" type="text/javascript">
+</script>
+<script src="%%app_resources%%/manager.js" language="JavaScript" type="text/javascript">
 </script>
 
-<div style="margin-left: 1em; margin-right: 1em">
+<script language="JavaScript" type="text/javascript">
+  var pageapp = new ResourceManagerApp('%%data_url%%', 'manage');
+  document.addEventListener("DOMContentLoaded", pageapp.init, false);
+</script>
+
+<div class="container mx-md-4" style="width: 90%">
+
+<!-- Title and Introduction -->
+
+<div class="row">
+  <h2 style="margin-top: 0px">Manage Educational Resources</h2>
+  <div class="col-sm-12">
+    <p class="small text-left">
+      This form can be used to approve educational resource submissions, and also to activate,
+      deactivate, and edit existing resources. In order to use this form, you must be given the
+      <i>admin</i> permission on Educational Resources by a site administrator.</p><br>
+   </div>
+</div>  
+
+<!-- Select a resource to manipulate -->
+
+<div class="row">
+  <div class="col-sm-12" role="navigation">
+    <ul class="nav nav-tabs nav-justified" id="nav-tabs"> <!-- tabbar -->
+      <li class="nav-item">
+	<a href="#pending" class="nav-link" onClick="pageapp.listResources('#pending');">Pending</a>
+      <li class="nav-item">
+	<a href="#active" class="nav-link" onClick="pageapp.listResources('#active');">Active</a>
+      <li class="nav-item">
+	<a href="#inactive" class="nav-link" onClick="pageapp.listResources('#inactive');">Inactive</a>
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12 resource-list">
+    <select id="res-selector"  size="10" style="width: inherit"
+	    onclick="pageapp.selectResource()">
+    </select>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-8">
+    <p align="left" class="small">
+      <b>Active</b> resources are currently visible to the public. <b>Pending</b> resources are
+      newly submitted. <b>Changed</b> resource records have been modified by their
+      submitter. The changes will become publicly visible when approved, and meanwhile the old
+      version remains visible on the website. <b>Inactive</b> resources are not visible on the
+      public website, but remain in the system for later use. When you <b>delete</b> a record, it
+      vanishes from the system completely and cannot be restored.</p>
+  </div>
+  <div class="form-group">
+    <button type="button" id="btn-activate" class="btn btn-primary"
+	    onclick="pageapp.changeResourceStatus('activate')"> Activate </button>
+    <button type="button" id="btn-inactivate" class="btn btn-primary"
+	    onclick="pageapp.changeResourceStatus('inactivate')"> Inactivate </button>
+    <button type="button" id="btn-delete" class="btn btn-primary"
+	    onclick="pageapp.deleteResource()"> Delete </button>
+  </div>
+  <div class="form-group">
+    <button type="button" class="btn" onclick="pageapp.clearSelection()">
+      Clear selection </button>
+  </div>
+</div>
+
+<!-- Edit Resource Attributes -->
+
+<hr>
+
+<form id="res-edit" class="form-horizontal">
   
-<!-- Section I: Title -->
-<center>
-    <div name="intro" style="margin-left: 1em; margin-right: 1em;">
-        <p align="center" class="pageTitle">Manage Resources</p>
-        <p align="center" class="small">Change the approval status of new, altered, or existing resources</p>
-    </div>
-</center>
-<br>
+  [[editform.html]]
 
-<!-- Section IIa: Select Resource -->
-<div class="row pageRow">
-    <div class="col-sm-12 container" style="width:95%;">
-        <ul class="nav nav-tabs nav-justified">
-            <li class="nav-item active"><a href="#pending" class="nav-link active" data-toggle="tab">Pending</a></li>
-            <li class="nav-item"><a href="#active" class="nav-link" data-toggle="tab">Active</a></li>
-            <li class="nav-item"><a href="#inactive" class="nav-link" data-toggle="tab">Inactive</a></li>
-        </ul>
-	<div class="tab-content">
-	    <div class="tab-pane active" id="pending">
-		<select size="12" id="pendingList"></select>
-	    </div>
-	    <div class="tab-pane" id="active">
-		<select size="12" id="activeList"></select>
-	    </div>
-	    <div class="tab-pane" id="inactive">
-		<select size="12" id="inactiveList"></select>
-	    </div>
-	</div>
-    	<div class="col-sm-12 send">
-        <center><p align="center" class="small">First select a resource and choose Edit Resource. Then select an action or edit the submission below.</p></center><br>
-	    <input type='submit' onclick='editFill(); return false;' data-dismiss='modal' value='Edit Resource' class='btn btn-primary'>
-            <button type="button" class="btn btn-primary" onclick="sendSubmission('active')">Activate</button>
-            <button type="button" class="btn btn-primary" onclick="sendSubmission('inactive')">Deactivate</button>
-            <button type="button" class="btn btn-primary" onclick="sendSubmission('delete')">Delete</button>
-    	</div>
-    <hr>
-    </div>
-</div>
+  <div class="form-group" style="margin-top: 24px;">
+    <button type="button" class="btn btn-primary" onclick="pageapp.addUpdateResource('approve')">
+      Approve</button>
+    &nbsp;&nbsp;
+    <button type="button" class="btn btn-primary" onclick="pageapp.addUpdateResource('save')">
+      Save changes</button>
+    &nbsp;&nbsp;
+    <button type="button" class="btn btn-primary" onclick="pageapp.changeResourceStatus('revert')"
+	    id="btn-discard">
+      Discard changes</button>
+  </div>
 
-<!-- Section IIb: Submission Form -->
-<div class="row pageRow">
-    <div class="col-sm-12">
-        <div class="section-title left"><b>Resource Title:</b></div>
-        <input class="right" type="text" id="res-title" size="52">
-    </div>
-</div>
+  <div class="form-group" id="msg-pending" style="display: none">
+    <p align="left" class="small">
+     If you <b>approve</b> this resource, it will then become active and be visible on the public
+     website. If you have made changes to any of the fields on this form, you can <b>save</b>
+     them without activating the resource.</p>
+  </div>
 
-<div class="row pageRow">
-    <div class="col-sm-12">
-        <div class="section-title left"><b>Resource Description:</b></div>
-        <textarea class="right" id="res-desc" rows="4" cols="50"></textarea>
-    </div>
-</div>
+  <div class="form-group" id="msg-changed" style="display: none">
+    <p align="left" class="small">
+      If you <b>approve</b> the changes to this resource, they will become visible on the public
+      website if the resource is currently active. If it is currently inactive, the changes will
+      subsequently be visible whenever it is activated in the future. If you have made further
+      changes to any of the fields on this form, you can <b>save</b> them without affecting the
+      publicly visible entry. If you click <b>discard</b>, all of the changes highlighted on this
+      form will be permanently discarded. The resource will revert to the attributes that are
+      currently publicly visible.</p>
+  </div>
+  
+</form>
 
-<div class="row pageRow">
-    <div class="col-sm-12">
-        <div class="section-title left"><b>Link to Resource:</b></div>
-        <div class="section-inputs">
-            <input id="res-url" size="52" type="text" onblur="showHideImgUploader()">
-        </div>
-    </div>
-</div>
-
-<div class="row pageRow" id="imageUploadRow">
-    <div class="col-sm-12" style="padding-top: 2em;">
-        <div class="section-title left"><b>Image to Display:</b></div>
-        <div class="section-inputs imageInput">
-            <span><small>(Images will be resized to 140x140 pixels)</small></span>
-            <input name="res-img" value="res-img" id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" style="float:left;"/>
-            <div id="imgTest" class="col-sm-12"><img id="res-thumb"/></div>
-        </div>
-    </div>
-</div>
-
-<div class="row pageRow">
-    <div class="col-sm-6">
-        <div class="section-title"><b>Type of Resource:</b></div>
-        <form class="section-inputs" id="res-type">
-            <p>
-                <input type="radio" name="res-type" value="web"> Web app<br>
-                <input type="radio" name="res-type" value="mobile"> Mobile app<br>
-                <input type="radio" name="res-type" value="lesson_plan"> Lesson plan or educational activity<br>
-                <input type="radio" name="res-type" value="tutorial"> Educational tutorial<br>
-                <input type="radio" name="res-type" value="data_entry"> Data entry tutorial<br>
-                <input type="radio" name="res-type" value="R"> R script or package<br>
-                <input type="radio" name="res-type" value="presentation"> Presentation<br>
-                <input type="radio" name="res-type" value="API"> API<br>
-                <input type="radio" name="res-type" value="other"> Other<br>
-            </p>
-        </form>
-    </div>
-    <div class="col-sm-6">
-        <div class="section-title "><b>Intended Audiences:</b></div>
-        <form class="section-inputs" id="audience">
-            <p>
-                <input type="checkbox" name="res-aud" value="general"> General audiences<br>
-                <input type="checkbox" name="res-aud" value="primary"> Primary school<br>
-                <input type="checkbox" name="res-aud" value="secondary"> Middle/high school<br>
-                <input type="checkbox" name="res-aud" value="ug-intro"> Undergraduate, introductory<br>
-                <input type="checkbox" name="res-aud" value="ug-adv"> Undergraduate, advanced<br>
-                <input type="checkbox" name="res-aud" value="grad"> Graduate/professional<br>
-                <input type="checkbox" name="res-aud" value="other_aud"> Other<br>
-            </p>
-        </form>
-    </div>
-</div>
-
-<div class="row pageRow">
-    <div class="col-sm-12">
-        <div class="section-title"><b>Author Information:</b></div>
-        <!-- this needs to autofill via Wing -->
-        <div class="section-labels">
-            <div class="inputrow"><p class="wide">Name</p></div>
-            <div class="inputrow"><p class="wide">E-mail</p></div>
-            <div class="inputrow"><p class="wide">Affiliation</p></div>
-            <div class="inputrow"><p class="wide">ORCID (optional)</p></div>
-        </div>
-        <form class="section-inputs" id="auth-info">
-            <div class="inputrow"><input type="text" name="auth-name" size="80"></div>
-            <div class="inputrow"><input type="text" name="auth-email" size="80"></div>
-            <div class="inputrow"><input type="text" name="auth-affil" size="80"></div>
-            <div class="inputrow"><input type="text" name="auth-ORCID" size="29" placeholder="0000-0000-0000-0000"></div>
-        </form>
-    </div>
-</div>
-
-<div class="row pageRow">
-    <div class="col-sm-12">
-        <div class="section-title"><b>Keywords: </b><small>(Separate multiple terms with semicolons or commas)</small></div>
-        <div class="section-labels">
-            <div class="inputrow"><p class="wide">Topics</p></div>
-            <div class="inputrow"><p class="wide">Taxonomic Groups</p></div>
-            <div class="inputrow"><p class="wide">Time Interval</p></div>
-        </div>
-        <div class="section-inputs">
-            <div class="inputrow"><input type="text" name="res-topics" size="70"></div>
-            <div class="inputrow" style="position:relative;">
-                <input type="text" name="res-taxa" size="48"
-                id="taxonAutocompleteInput"
-                onkeyup="autocompleteFill(taxonAutocompleteInput)"> (start with a capital letter then select)
-                <div class="searchResult dropdown-menu" style="display: none;"></div>
-            </div>
-            <div class="inputrow">
-                <input type="text" name="res-timestart" id="timeStartAutocompleteInput" onkeyup="autocompleteFill(timeStartAutocompleteInput)">
-                <div class="searchResult dropdown-menu" style="display: none;"></div>
-                to
-                <input type="text" name="res-timeend"
-                id="timeEndAutocompleteInput" onkeyup="autocompleteFill(timeEndAutocompleteInput)"> (start with a capital letter then select)
-                <div class="searchResult dropdown-menu" style="display: none;"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Section III: Submit Data -->
-<div class="row pageRow">
-    <div class="col-sm-12 send">
-        <button type="button" class="btn btn-primary" onclick="sendSubmission('active')">Activate with changes</button>
-        <button type="button" class="btn btn-primary" onclick="sendSubmission('changes')">Save changes without activating</button>
-    </div>
-    </div>
-    </div>
-
-<!-- Section V: Scripts -->
-<script language="JavaScript" type="text/javascript">
-
-window.onload = function() {
-	getEntries('all');
-}
-
-function getEntries(tabName) {
-    var requestString = {'pending':'status=pending,changes','active':'status=active','inactive':'status=inactive','all':'all_records'};
-    var htmlRequest = test_data_service_url + 'eduresources/list.json?' + requestString[tabName];
-    $.getJSON(htmlRequest).then(
-	function(json) {
-	    if (json.records.length > 0) {
-		var resourceList = {pending:"",active:"",inactive:""};
-        	json.records.map(function(d){
-		    switch(d.sta){
-			case "pending":
-         		    resourceList.pending += "<option name='resource' value=" + d.oid + "> " + d.title + " (" + d.author + ") [new] </option>";
-			    break;
-			case "changes":
-         		    resourceList.pending += "<option name='resource' value=" + d.oid + "> " + d.title + " (" + d.author + ") [changed] </option>";
-			    break;
-			case "active":
-         		    resourceList.active += "<option name='resource' value=" + d.oid + "> " + d.title + " (" + d.author + ")</option>";
-			    break;
-			case "inactive":
-         		    resourceList.inactive += "<option name='resource' value=" + d.oid + "> " + d.title + " (" + d.author + ")</option>";
-			    break;
-			default:
-		    }
-        	});
-		switch(tabName) {
-		    case "all":
-			$("#pending").children('select').html(resourceList.pending);
-			$("#active").children('select').html(resourceList.active);
-			$("#inactive").children('select').html(resourceList.inactive);
-			break;
-		    case "pending":
-			$("#pending").children('select').html(resourceList.pending);
-			break;
-		    case "active":
-			$("#active").children('select').html(resourceList.active);
-			break;
-		    case "inactive":
-			$("#inactive").children('select').html(resourceList.inactive);
-			break;
-		};
-	    } else {
-		$(".tab-pane").children("select").html("");
-	    };
-	}
-    );
-}
-
-function editFill(){
-    clearResourceForm();
-    resOID = $("option[name=resource]:checked").val();
-    $.getJSON(test_data_service_url + "eduresources/single.json?eduresource_id=" + resOID + "&show=image").then(
-        function(json) {
-            var res = json.records[0];
-        clearResourceForm();
-            if (res.title) {$('#res-title').val(res.title)};
-            if (res.description) {$('#res-desc').val(res.description)};
-            if (res.url) {$('#res-url').val(res.url)};
-            if (res.tags) {$('#res-tags').val()};
-            if (res.author) {$('input[name=auth-name]').val(res.author)};
-            if (res.email) {$('input[name=auth-email]').val(res.email)};
-            if (res.affil) {$('input[name=auth-affil]').val(res.affil)};
-            if (res.orcid) {$('input[name=auth-ORCID]').val(res.orcid)};
-            if (res.tags) {
-                res.tags.split(', ').map(function(d) {
-                    $('input[value=' + d + ']').prop('checked','true');
-                })
-            };
-            if (res.topics) {$('input[name=res-topics]').val(res.topics)};
-            if (res.taxa) {$('input[name=res-taxa]').val(res.taxa)};
-            if (res.timespan) {
-                var time = /-/.test(res.timespan)?res.timespan.split(' - '):[res.timespan,""];
-                $('input[name=res-timestart]').val(time[0]);
-                $('input[name=res-timeend]').val(time[1]);
-            }
-            if (res.image_data) {
-                $('#imgTest').html("<img src='" + res.image_data + "' style='float:left'>")
-            } else if (res.image==encodeURI(res.image)) {
-                $('#imgTest').html("<img src='" + res.image + "'> ")
-            };
-        }
-    );
-}
-
-function showHideImgUploader() {
-	var displayValue = /youtube.com/.test(document.getElementById('res-url').value);
-	$('#imageUploadRow').find('.section-title').css('color',displayValue?'#999':'black');
-	$('#imageUploadRow').find('.section-inputs').css('display',displayValue?'none':'block');	
-}
-
-var image_base64;
-
-function sendSubmission(status) {
-    var default_img = '';
-    var yt_video = /youtube.com/.test(document.getElementById('res-url').value);
-
-    // Set the default image if one was not uploaded 
-    if (!image_base64 && !yt_video) {
-        switch ($("input[name=res-type]:checked").val()) {
-            case 'web':
-                default_img = 'default_web.png';
-                break;
-            case 'mobile':
-                default_img = 'default_mobile.png';
-                break;
-            case 'lesson_plan':
-                default_img = 'default_lesson_plan.png';
-                break;
-            case 'tutorial':
-                default_img = 'default_tutorial.png';
-                break;
-            case 'data_entry':
-                default_img = 'default_data_entry.png';
-                break;
-            case 'R':
-                default_img = 'default_R.png';
-                break;
-            case 'presentation':
-                default_img = 'default_presentation.png';
-                break;
-            case 'API':
-                default_img = 'default_api.png';
-                break;
-            case 'other':
-                default_img = 'default_other.png';
-                break;
-            default:
-                default_img = '';
-        }
-    }
-
-    //For safety, blank uploaded images and default images if URL containes a YouTube video
-    if (yt_video) {
-        default_img = '';
-        image_base64 = '';
-    }
-
-    // collect data from html form
-    var inputs = {
-        title: document.getElementById('res-title').value,
-        description: document.getElementById('res-desc').value,
-        url: document.getElementById('res-url').value,
-        tags: $("input[name=res-type]:checked").val() + "," + $("input[name=res-aud]:checked").map(function(){return(this.value);}).get().join(","),
-        is_video: /youtube.com/.test(document.getElementById('res-url').value),
-        author: $("input[name=auth-name]").val(),
-        email: $("input[name=auth-email]").val(),
-        affil: $("input[name=auth-affil]").val(),
-        orcid: $("input[name=auth-ORCID]").val(),
-        topics: $("input[name=res-topics]").val(),
-        taxa: $("input[name=res-taxa]").val(),
-        timespan: $("input[name=res-timeend]").val().length>0?($("input[name=res-timestart]").val() + " - " +  $("input[name=res-timeend]").val()):$("input[name=res-timestart]").val(),
-        image_data: image_base64,
-    };
-
-    if (status != 'delete' && (inputs.title == "" || inputs.author == "")) {
-	alert('Title and author name are required');
-    } else {
-	// send data to the PBDB API
-	var resJSON = JSON.stringify(inputs);
-	var resOID = $('.tab-pane.active').children('select').children('option:checked').val();
-	var resStatus = status=='delete' ? "" : ("&status=" + status);
-	var routeType = status=='delete' ? 'delete.json' : 'addupdate.json';
-	var alertString = {'delete':'deleted','active':'activated','inactive':'deactivated','changes':'changed'};
-	$.ajax({
-	    url: test_data_service_url + 'eduresources/' + routeType + '?eduresource_id=' + resOID + resStatus,
-	    type: status=='delete' ? 'GET' : 'PUT',
-	    data: status=='delete' ? "" : resJSON,
-	    contentType: 'application/json; charset=utf-8',
-	    dataType: 'json',
-	    async: false,
-	    success: function(data) {
-	        alert('Your resource was successfully ' + alertString[status]);
-	    },
-	    error: function (xhr, textStatus, error) {
-	        alert(textStatus + ": " + error);                
-	    }
-	  });
-
-      // clear the contents of all fields after submission
-      clearResourceForm();
-      //refresh the active pane
-      getEntries($('.tab-pane.active').attr('id'));
-      if (status!='delete') {getEntries(status)};
-    }
-  };
-
-  function clearResourceForm() {
-    document.getElementById('res-desc').value = '';
-    $('input[type=text]').val('');  
-    $('input[type=select]').val('');
-    $('input[type=radio]').prop('checked',false);
-    $('input[type=file]').val('');
-    $('input[type=checkbox]').prop('checked',false); 
-    $("#inputFileToLoad").val("");
-    $('#imgTest').html("");
-  };
-
-      function encodeImageFileAsURL() {
-        var filesSelected = document.getElementById("inputFileToLoad").files;
-        if (filesSelected.length > 0) {
-          var fileToLoad = filesSelected[0];
-
-          var fileReader = new FileReader();
-
-          fileReader.onload = function(fileLoadedEvent) {
-            
-            // base64 data
-            var srcData = fileLoadedEvent.target.result;
-            var thumbImg = document.getElementById('res-thumb');
-            
-            thumbImg.src = srcData;
-            resizeCanvas = document.createElement("canvas");
-            var MAX_WIDTH = 150;
-            var MAX_HEIGHT = 150;
-            var width = thumbImg.width;
-            var height = thumbImg.height;
-
-            if (width > height) {
-              if (width > MAX_WIDTH) {
-                height *= MAX_WIDTH / width;
-                width = MAX_WIDTH;
-              }
-            } else {
-              if (height > MAX_HEIGHT) {
-                width *= MAX_HEIGHT / height;
-                height = MAX_HEIGHT;
-              }
-            }
-            resizeCanvas.width = width;
-            resizeCanvas.height = height;
-            var ctx = resizeCanvas.getContext("2d");
-            ctx.drawImage(thumbImg, 0, 0, width, height);
-            image_base64 = resizeCanvas.toDataURL("image/png");
-            console.log(image_base64);
-              }
-            fileReader.readAsDataURL(fileToLoad);
-            }
-          };
-
-</script>
+%%errors%%

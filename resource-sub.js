@@ -134,28 +134,111 @@ function searchFocus(target,type){
 };
 
 
-  function encodeImageFileAsURL() {
+// function loadDisplayImage ( )
+// {
+//     var filesSelected = document.getElementById("res-imgfile").files;
+    
+//     if (filesSelected.length > 0)
+//     {
+// 	var fileToLoad = filesSelected[0];
+	
+// 	var fileReader = new FileReader();
+	
+// 	fileReader.onload = function(fileLoadedEvent) {
+	    
+//             // base64 data
+//             var srcData = fileLoadedEvent.target.result;
+	    
+//             var newImage = document.createElement('img');
+//             newImage.src = srcData;
+
+//         document.getElementById("imageDisplay").innerHTML = newImage.outerHTML;
+//         $("#imageDisplay").children("img").first();
+	  
+//         //console.log("Converted Base64 version is " + document.getElementById("imageDisplay").innerHTML);
+//         //image_base64 = srcData;
+// 	  var image_base64 = $('#imageDisplay').children('img').attr('src'); //shrunk to display size
+// 	  $("#res-imagedata").val(image_base64);
+//       }
+	
+//       fileReader.readAsDataURL(fileToLoad);
+//     }
+//   };
+
+function loadDisplayImage ( )
+{
     var filesSelected = document.getElementById("inputFileToLoad").files;
-    if (filesSelected.length > 0) {
-      var fileToLoad = filesSelected[0];
+    
+    if (filesSelected.length > 0)
+    {
+        var fileToLoad = filesSelected[0];
+        var fileReader = new FileReader();
+	
+        fileReader.onload = function(fileLoadedEvent) {
+            
+            // The expression fileLoadedEvent.target.result returns base64 data
+	    
+            var srcData = fileLoadedEvent.target.result;
+            var thumbImg = document.getElementById('res-thumb');
+	    
+	    // $$$ need to check for allowed image types
+	    
+            thumbImg.src = srcData;
+	    
+	    $("#res-imagedata").val(srcData);
+	    
+	    // // Create a canvas which we can use to resize the image and transform it into a PNG if
+	    // // it is not already in that format.
+	    
+	    // var resizer = document.createElement("canvas");
+	    // resizer.width = 4096;
+	    // resizer.height = 4096;
+	    // var ctx = resizer.getContext("2d");
+	    // ctx.drawImage(thumbImg, 0, 0);
+	    
+	    // // If either the width or height of the image exceeds 150 pixels, it must be scaled down.
+	    
+	    // if ( thumbImg.width > 150 || thumbImg.height > 150 )
+	    // {
 
-      var fileReader = new FileReader();
+	    // 	// If the height is larger than the width, scale the image so that the height is 150.
 
-      fileReader.onload = function(fileLoadedEvent) {
+	    // 	if ( thumbImg.height > thumbImg.width )
+	    // 	{
+	    // 	    var heightRatio = 150 / thumbImg.height;
+	    // 	    ctx.scale(heightRatio, heightRatio);
+	    // 	}
 
-        // base64 data
-        var srcData = fileLoadedEvent.target.result;
+	    // 	// Otherwise, scale the image so that the width is 150.
 
-        var newImage = document.createElement('img');
-        newImage.src = srcData;
+	    // 	else
+	    // 	{
+	    // 	    var widthRatio = 150 / thumbImg.width;
+	    // 	    ctx.scale(widthRatio, widthRatio);
+	    // 	}
 
-        document.getElementById("imgTest").innerHTML = newImage.outerHTML;
-        $("#imgTest").children("img").first()
-        //console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
-        //image_base64 = srcData;
-            image_base64 = $('#imgTest').children('img').attr('src'); //shrunk to display size
-      }
-      fileReader.readAsDataURL(fileToLoad);
+	    // 	// Copy the scaled image data back to thumbImg.
+
+	    // 	thumbImg.src = 
+		
+            // var MAX_WIDTH = 150;
+            // var MAX_HEIGHT = 150;
+            // var width = thumbImg.width;
+            // var height = thumbImg.height;
+	    
+	    // if ( 
+	    
+	    //         //avoid resize code for now
+	    //         if (width>150 || height>150) {
+            //         alert('Please choose an image no larger than 150x150 pixels');
+            //         return;
+	    //         } else {
+            //         image_base64 = thumbImg.src;
+	    //         };
+
+        };
+	
+        fileReader.readAsDataURL(fileToLoad);
     }
-  };
+}
 

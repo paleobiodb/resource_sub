@@ -9,7 +9,15 @@
 
 <script language="JavaScript" type="text/javascript">
     var data_service_url = '%%data_url%%';
-    var test_data_service_url = '%%test_data_url%%';
+    var params = %%params%%;
+    var debug_mode;
+  
+    if ( params.debug || params.debug == '' ) {
+        debug_mode = 1;
+    }
+    if ( params.debug == 'api' ) {
+        data_service_url = data_service_url.replace('data', 'dtest');
+    }
 </script>
 
 <div style="margin-left: 1em; margin-right: 1em">
@@ -186,7 +194,7 @@ window.onload = function() {
 
 function getEntries(tabName) {
     var requestString = {'pending':'status=pending,changes','active':'status=active','inactive':'status=inactive','all':'all_records'};
-    var htmlRequest = test_data_service_url + 'eduresources/list.json?' + requestString[tabName];
+    var htmlRequest = data_service_url + 'eduresources/list.json?' + requestString[tabName];
     $.getJSON(htmlRequest).then(
 	function(json) {
 	    if (json.records.length > 0) {
@@ -234,7 +242,7 @@ function getEntries(tabName) {
 function editFill(){
     clearResourceForm();
     resOID = $("option[name=resource]:checked").val();
-    $.getJSON(test_data_service_url + "eduresources/single.json?eduresource_id=" + resOID + "&show=image").then(
+    $.getJSON(data_service_url + "eduresources/single.json?eduresource_id=" + resOID + "&show=image").then(
         function(json) {
             var res = json.records[0];
         clearResourceForm();
@@ -346,10 +354,23 @@ function sendSubmission(status) {
 	var resStatus = status=='delete' ? "" : ("&status=" + status);
 	var routeType = status=='delete' ? 'delete.json' : 'addupdate.json';
 	var alertString = {'delete':'deleted','active':'activated','inactive':'deactivated','changes':'changed'};
+	var htmlRequest = data_service_url + 'eduresources/' + routeType + '?eduresource_id=' + 
+	    resOID + resStatus;
+	var htmlData = status=='delete' ? "" : resJSON;
+	
+	if ( status == 'delete' ) {
+	    if ( ! confirm("Delete resource " + resOID + "?") ) return;
+	}
+	
+	if ( debug_mode ) {
+	    console.log(htmlRequest);
+	    console.log(htmlData);
+	}
+	
 	$.ajax({
-	    url: test_data_service_url + 'eduresources/' + routeType + '?eduresource_id=' + resOID + resStatus,
+	    url: htmlRequest,
 	    type: status=='delete' ? 'GET' : 'PUT',
-	    data: status=='delete' ? "" : resJSON,
+	    data: htmlData,
 	    contentType: 'application/json; charset=utf-8',
 	    dataType: 'json',
 	    async: false,

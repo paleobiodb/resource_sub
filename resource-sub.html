@@ -7,8 +7,17 @@
 
 <script src="%%app_resources%%/resource-sub.js" language="JavaScript" type="text/javascript"></script>
 <script language="JavaScript" type="text/javascript">
-    var data_service_url = '%%data_url%%';
-    var test_data_service_url = '%%test_data_url%%';
+  var data_service_url = '%%data_url%%';
+  var test_data_service_url = '%%test_data_url%%';
+  var params = %%params%%;
+  var debug_mode;
+  
+  if ( params.debug || params.debug == '' ) {
+      debug_mode = 1;
+  }
+  if ( params.debug == 'api' ) {
+      data_service_url = data_service_url.replace('data', 'dtest');
+  }
 </script>
 
 <!-- Section I: Title -->
@@ -182,7 +191,8 @@
     }
 
     function getList() {
-        var htmlRequest = test_data_service_url + 'eduresources/list.json?enterer=me';
+        var htmlRequest = data_service_url + 'eduresources/list.json?enterer=me';
+	if ( debug_mode) console.log(htmlRequest);
         $.getJSON(htmlRequest).then(
             function(json) {
                 if (json.records.length > 0) {
@@ -205,8 +215,10 @@
     
     function editFill() {
         var selected = $("input[name=resource]:checked").val();
-        var urlString = test_data_service_url + "eduresources/single.json?eduresource_id=" + selected + "&show=image";
-	    $.getJSON(urlString).then(
+        var urlString = data_service_url + "eduresources/single.json?eduresource_id=" + 
+	    selected + "&show=image";
+	if ( debug_mode ) console.log(urlString);
+	$.getJSON(urlString).then(
             function(json) {
                 var res = json.records[0];
                 clearResourceForm();
@@ -323,8 +335,13 @@
             // send data to the PBDB API
             var resJSON = JSON.stringify(inputs);
             var existingRecord = selectedRecordOID ? ("?eduresource_id=" + selectedRecordOID) : "";
+	    var htmlRequest = data_service_url + 'eduresources/addupdate.json' + existingRecord;
+	    if ( debug_mode ) {
+		console.log(htmlRequest);
+		console.log(inputs);
+	    }
             $.ajax({
-                url: test_data_service_url + 'eduresources/addupdate.json' + existingRecord,
+                url: htmlRequest,
                 type: 'PUT',
                 data: resJSON,
                 contentType: 'application/json; charset=utf-8',
@@ -335,8 +352,42 @@
 		            getList();
                     alert('Your resource was successfully submitted for approval');                
                 },
-                error: function (xhr, textStatus, error) {
-                    alert('An error occurred, and your resource was not submitted (' + textStatus + ')');                
+		error: function (xhr, textStatus, error) {
+		    if ( debug_mode ) console.log(xhr.responseText);
+		    
+		    var message = "";
+		    
+		    switch (xhr.status) {
+		    case 400:
+			message += "Bad Request (400): ";
+			var error_match = xhr.responseText.match(/E_[A-Z_]+[^"]+/);
+			var second_match = xhr.responseText.match(/"errors": \["([^"]+)/);
+			if ( error_match ) message += error_match[0];
+			else if ( second_match ) message += second_match[1];
+			else message += "An error occurred";
+			break;
+		    case 401:
+			message += "Unauthorized (401): Please log in and try again.";
+			break;
+		    case 403:
+		    case 404:
+		    case 405:
+		    case 408:
+		    case 415:
+		    case 500:
+			message += "Server Error (500): Please try again later.";
+			break;
+		    case 502:
+			message += "Bad Gateway (502): Please try again later.";
+			break;
+		    case 504:
+			message += "Gateway Timeout (504): Please try again later.";
+			break;
+		    default:
+			message += textStatus + " " + errorThrown;
+		    }
+		    
+                    alert(message);
                 }
             });
         }

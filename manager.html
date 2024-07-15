@@ -179,7 +179,7 @@
 <!-- Section III: Submit Data -->
 <div class="row pageRow">
     <div class="col-sm-12 send">
-        <button type="button" class="btn btn-primary" onclick="sendSubmission('active')">Activate with changes</button>
+        <button type="button" class="btn btn-primary" onclick="sendSubmission('activate')">Activate with changes</button>
         <button type="button" class="btn btn-primary" onclick="sendSubmission('changes')">Save changes without activating</button>
     </div>
     </div>
@@ -200,18 +200,19 @@ function getEntries(tabName) {
 	    if (json.records.length > 0) {
 		var resourceList = {pending:"",active:"",inactive:""};
         	json.records.map(function(d){
+		    d.sub ||= '';
 		    switch(d.sta){
 			case "pending":
-         		    resourceList.pending += "<option name='resource' value=" + d.oid + "> " + d.title + " (" + d.author + ") [new] </option>";
+         		    resourceList.pending += "<option name='resource' value=" + d.oid + "> " + d.title + " (" + d.sub + ") [new] </option>";
 			    break;
 			case "changes":
-         		    resourceList.pending += "<option name='resource' value=" + d.oid + "> " + d.title + " (" + d.author + ") [changed] </option>";
+         		    resourceList.pending += "<option name='resource' value=" + d.oid + "> " + d.title + " (" + d.sub + ") [changed] </option>";
 			    break;
 			case "active":
-         		    resourceList.active += "<option name='resource' value=" + d.oid + "> " + d.title + " (" + d.author + ")</option>";
+         		    resourceList.active += "<option name='resource' value=" + d.oid + "> " + d.title + " (" + d.sub + ")</option>";
 			    break;
 			case "inactive":
-         		    resourceList.inactive += "<option name='resource' value=" + d.oid + "> " + d.title + " (" + d.author + ")</option>";
+         		    resourceList.inactive += "<option name='resource' value=" + d.oid + "> " + d.title + " (" + d.sub + ")</option>";
 			    break;
 			default:
 		    }
@@ -275,172 +276,200 @@ function editFill(){
     );
 }
 
-function showHideImgUploader() {
-	var displayValue = /youtube.com/.test(document.getElementById('res-url').value);
-	$('#imageUploadRow').find('.section-title').css('color',displayValue?'#999':'black');
-	$('#imageUploadRow').find('.section-inputs').css('display',displayValue?'none':'block');	
-}
-
-var image_base64;
-
-function sendSubmission(status) {
-    var default_img = '';
-    var yt_video = /youtube.com/.test(document.getElementById('res-url').value);
-
-    // Set the default image if one was not uploaded 
-    if (!image_base64 && !yt_video) {
-        switch ($("input[name=res-type]:checked").val()) {
-            case 'web':
-                default_img = 'default_web.png';
-                break;
-            case 'mobile':
-                default_img = 'default_mobile.png';
-                break;
-            case 'lesson_plan':
-                default_img = 'default_lesson_plan.png';
-                break;
-            case 'tutorial':
-                default_img = 'default_tutorial.png';
-                break;
-            case 'data_entry':
-                default_img = 'default_data_entry.png';
-                break;
-            case 'R':
-                default_img = 'default_R.png';
-                break;
-            case 'presentation':
-                default_img = 'default_presentation.png';
-                break;
-            case 'API':
-                default_img = 'default_api.png';
-                break;
-            case 'other':
-                default_img = 'default_other.png';
-                break;
-            default:
-                default_img = '';
-        }
-    }
-
-    //For safety, blank uploaded images and default images if URL containes a YouTube video
-    if (yt_video) {
-        default_img = '';
-        image_base64 = '';
-    }
-
-    // collect data from html form
-    var inputs = {
-        title: document.getElementById('res-title').value,
-        description: document.getElementById('res-desc').value,
-        url: document.getElementById('res-url').value,
-        tags: $("input[name=res-type]:checked").val() + "," + $("input[name=res-aud]:checked").map(function(){return(this.value);}).get().join(","),
-        is_video: /youtube.com/.test(document.getElementById('res-url').value),
-        author: $("input[name=auth-name]").val(),
-        email: $("input[name=auth-email]").val(),
-        affil: $("input[name=auth-affil]").val(),
-        orcid: $("input[name=auth-ORCID]").val(),
-        topics: $("input[name=res-topics]").val(),
-        taxa: $("input[name=res-taxa]").val(),
-        timespan: $("input[name=res-timeend]").val().length>0?($("input[name=res-timestart]").val() + " - " +  $("input[name=res-timeend]").val()):$("input[name=res-timestart]").val(),
-        image_data: image_base64,
-    };
-
-    if (status != 'delete' && (inputs.title == "" || inputs.author == "")) {
-	alert('Title and author name are required');
-    } else {
-	// send data to the PBDB API
-	var resJSON = JSON.stringify(inputs);
-	var resOID = $('.tab-pane.active').children('select').children('option:checked').val();
-	var resStatus = status=='delete' ? "" : ("&status=" + status);
-	var routeType = status=='delete' ? 'delete.json' : 'addupdate.json';
-	var alertString = {'delete':'deleted','active':'activated','inactive':'deactivated','changes':'changed'};
-	var htmlRequest = data_service_url + 'eduresources/' + routeType + '?eduresource_id=' + 
-	    resOID + resStatus;
-	var htmlData = status=='delete' ? "" : resJSON;
-	
-	if ( status == 'delete' ) {
-	    if ( ! confirm("Delete resource " + resOID + "?") ) return;
-	}
-	
-	if ( debug_mode ) {
-	    console.log(htmlRequest);
-	    console.log(htmlData);
-	}
-	
-	$.ajax({
-	    url: htmlRequest,
-	    type: status=='delete' ? 'GET' : 'PUT',
-	    data: htmlData,
-	    contentType: 'application/json; charset=utf-8',
-	    dataType: 'json',
-	    async: false,
-	    success: function(data) {
-	        alert('Your resource was successfully ' + alertString[status]);
-	    },
-	    error: function (xhr, textStatus, error) {
-	        alert(textStatus + ": " + error);                
-	    }
-	  });
-
+  function showHideImgUploader() {
+      var displayValue = /youtube.com/.test(document.getElementById('res-url').value);
+      $('#imageUploadRow').find('.section-title').css('color',displayValue?'#999':'black');
+      $('#imageUploadRow').find('.section-inputs').css('display',displayValue?'none':'block');	
+  }
+  
+  var image_base64;
+  
+  function sendSubmission(status) {
+      var default_img = '';
+      var yt_video = /youtube.com/.test(document.getElementById('res-url').value);
+      
+      // Set the default image if one was not uploaded 
+      if (!image_base64 && !yt_video) {
+          switch ($("input[name=res-type]:checked").val()) {
+          case 'web':
+              default_img = 'default_web.png';
+              break;
+          case 'mobile':
+              default_img = 'default_mobile.png';
+              break;
+          case 'lesson_plan':
+              default_img = 'default_lesson_plan.png';
+              break;
+          case 'tutorial':
+              default_img = 'default_tutorial.png';
+              break;
+          case 'data_entry':
+              default_img = 'default_data_entry.png';
+              break;
+          case 'R':
+              default_img = 'default_R.png';
+              break;
+          case 'presentation':
+              default_img = 'default_presentation.png';
+              break;
+          case 'API':
+              default_img = 'default_api.png';
+              break;
+          case 'other':
+              default_img = 'default_other.png';
+              break;
+          default:
+              default_img = '';
+          }
+      }
+      
+      //For safety, blank uploaded images and default images if URL containes a YouTube video
+      if (yt_video) {
+          default_img = '';
+          image_base64 = '';
+      }
+      
+      // collect data from html form
+      var inputs = {
+          title: document.getElementById('res-title').value,
+          description: document.getElementById('res-desc').value,
+          url: document.getElementById('res-url').value,
+          tags: $("input[name=res-type]:checked").val() + "," + $("input[name=res-aud]:checked").map(function(){return(this.value);}).get().join(","),
+          is_video: /youtube.com/.test(document.getElementById('res-url').value),
+          author: $("input[name=auth-name]").val(),
+          email: $("input[name=auth-email]").val(),
+          affil: $("input[name=auth-affil]").val(),
+          orcid: $("input[name=auth-ORCID]").val(),
+          topics: $("input[name=res-topics]").val(),
+          taxa: $("input[name=res-taxa]").val(),
+          timespan: $("input[name=res-timeend]").val().length>0?($("input[name=res-timestart]").val() + " - " +  $("input[name=res-timeend]").val()):$("input[name=res-timestart]").val(),
+          image_data: image_base64,
+      };
+      
+      var resOID = $('.tab-pane.active').children('select').children('option:checked').val();
+      var resStatus = '';
+      var htmlData = '';
+      var htmlType = 'GET';
+      var routeType = 'addupdate.json';
+      
+      if ( status == 'activate' ) {
+	  status = 'active';
+	  resStatus = '&status=active';
+	  htmlType = 'PUT';
+	  htmlData = JSON.stringify(inputs);
+	  
+	  if ( inputs.title == "" || inputs.author == "" ) {
+	      alert('Title and author name are required');
+	      return;
+	  }
+      }
+      
+      else if ( status == 'changes' ) {
+	  resStatus = '&status=changes';
+	  htmlType = 'PUT';
+	  htmlData = JSON.stringify(inputs);
+	  
+	  if ( inputs.title == "" || inputs.author == "" ) {
+	      alert('Title and author name are required');
+	      return;
+	  }
+      }
+      
+      else if ( status == 'delete' ) {
+	  routeType = 'delete.json';
+	  if ( ! confirm("Delete resource " + resOID + "?") ) return;
+      }
+      
+      else {
+	  resStatus = '&status=' + status;
+      }
+      
+      var alertString = { 'delete': 'deleted', 'active': 'activated',
+			  'inactive': 'deactivated', 'changes': 'changed' };
+      
+      // send data to the PBDB API
+      
+      var htmlRequest = data_service_url + 'eduresources/' + routeType + '?eduresource_id=' + 
+	  resOID + resStatus;
+      
+      if ( debug_mode ) {
+	  console.log(htmlRequest);
+	  console.log(htmlData);
+      }
+      
+      $.ajax({
+	  url: htmlRequest,
+	  type: htmlType,
+	  data: htmlData,
+	  contentType: 'application/json; charset=utf-8',
+	  dataType: 'json',
+	  async: false,
+	  success: function(data) {
+	      alert('Your resource was successfully ' + alertString[status]);
+	  },
+	  error: function (xhr, textStatus, error) {
+	      alert(textStatus + ": " + error);                
+	  }
+      });
+      
       // clear the contents of all fields after submission
       clearResourceForm();
       //refresh the active pane
       getEntries($('.tab-pane.active').attr('id'));
       if (status!='delete') {getEntries(status)};
-    }
   };
-
+  
   function clearResourceForm() {
-    document.getElementById('res-desc').value = '';
-    $('input[type=text]').val('');  
-    $('input[type=select]').val('');
-    $('input[type=radio]').prop('checked',false);
-    $('input[type=file]').val('');
-    $('input[type=checkbox]').prop('checked',false); 
-    $("#inputFileToLoad").val("");
-    $('#imgTest').html("");
+      document.getElementById('res-desc').value = '';
+      $('input[type=text]').val('');  
+      $('input[type=select]').val('');
+      $('input[type=radio]').prop('checked',false);
+      $('input[type=file]').val('');
+      $('input[type=checkbox]').prop('checked',false); 
+      $("#inputFileToLoad").val("");
+      $('#imgTest').html("");
   };
-
-      function encodeImageFileAsURL() {
-        var filesSelected = document.getElementById("inputFileToLoad").files;
-        if (filesSelected.length > 0) {
+  
+  function encodeImageFileAsURL() {
+      var filesSelected = document.getElementById("inputFileToLoad").files;
+      if (filesSelected.length > 0) {
           var fileToLoad = filesSelected[0];
-
+	  
           var fileReader = new FileReader();
-
+	  
           fileReader.onload = function(fileLoadedEvent) {
-            
-            // base64 data
-            var srcData = fileLoadedEvent.target.result;
-            var thumbImg = document.getElementById('res-thumb');
-            
-            thumbImg.src = srcData;
-            resizeCanvas = document.createElement("canvas");
-            var MAX_WIDTH = 150;
-            var MAX_HEIGHT = 150;
-            var width = thumbImg.width;
-            var height = thumbImg.height;
-
-            if (width > height) {
-              if (width > MAX_WIDTH) {
-                height *= MAX_WIDTH / width;
-                width = MAX_WIDTH;
+              
+              // base64 data
+              var srcData = fileLoadedEvent.target.result;
+              var thumbImg = document.getElementById('res-thumb');
+              
+              thumbImg.src = srcData;
+              resizeCanvas = document.createElement("canvas");
+              var MAX_WIDTH = 150;
+              var MAX_HEIGHT = 150;
+              var width = thumbImg.width;
+              var height = thumbImg.height;
+	      
+              if (width > height) {
+		  if (width > MAX_WIDTH) {
+                      height *= MAX_WIDTH / width;
+                      width = MAX_WIDTH;
+		  }
+              } else {
+		  if (height > MAX_HEIGHT) {
+                      width *= MAX_HEIGHT / height;
+                      height = MAX_HEIGHT;
+		  }
               }
-            } else {
-              if (height > MAX_HEIGHT) {
-                width *= MAX_HEIGHT / height;
-                height = MAX_HEIGHT;
-              }
-            }
-            resizeCanvas.width = width;
-            resizeCanvas.height = height;
-            var ctx = resizeCanvas.getContext("2d");
-            ctx.drawImage(thumbImg, 0, 0, width, height);
-            image_base64 = resizeCanvas.toDataURL("image/png");
-            console.log(image_base64);
-              }
-            fileReader.readAsDataURL(fileToLoad);
-            }
-          };
-
+              resizeCanvas.width = width;
+              resizeCanvas.height = height;
+              var ctx = resizeCanvas.getContext("2d");
+              ctx.drawImage(thumbImg, 0, 0, width, height);
+              image_base64 = resizeCanvas.toDataURL("image/png");
+              console.log(image_base64);
+          }
+          fileReader.readAsDataURL(fileToLoad);
+      }
+  };
+  
 </script>
